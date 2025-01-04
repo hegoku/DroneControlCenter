@@ -5,7 +5,7 @@
 #include <QByteArray>
 
 #define ANOTC_DATA_MAX_SIZE 512
-#define ANOTC_V8_HEAD_SIZE 7
+#define ANOTC_V8_HEAD_SIZE 6
 #define ANOTC_V8_HEAD 0xAB
 
 #define ANOTC_V8_FRAME_SUMCHECK_INDEX 5

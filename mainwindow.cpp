@@ -67,7 +67,6 @@ void MainWindow::anotcTimerHanlder()
     union _un_anotc_v8_frame data;
     while(MainWindow::anotc_queue.isEmpty()==false) {
         data = MainWindow::anotc_queue.first();
-
         MainWindow::anotc_queue.removeFirst();
     }
     timer->start();
