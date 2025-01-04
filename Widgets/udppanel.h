@@ -16,6 +16,8 @@ public:
     explicit UDPPanel(QWidget *parent = nullptr);
     ~UDPPanel();
 
+    void (*handleData)(QByteArray *data);
+
 signals:
     void onConnect();
     void onDisconnect();

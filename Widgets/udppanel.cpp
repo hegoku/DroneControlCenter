@@ -52,6 +52,7 @@ void UDPPanel::handleUDPData()
         QByteArray data;
         data.resize(udpSocket->pendingDatagramSize());
         udpSocket->readDatagram(data.data(), data.size(), &hostAddress, &hostPort);
+        handleData(&data);
     }
 }
 

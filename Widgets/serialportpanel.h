@@ -18,6 +18,7 @@ public:
     ~SerialPortPanel();
 
     void refreshSerialPort();
+    void (*handleData)(QByteArray *data);
 
 signals:
     void onConnect();

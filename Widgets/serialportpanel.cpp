@@ -102,6 +102,7 @@ void SerialPortPanel::ClickButton_connect_serial_port()
 void SerialPortPanel::SerialRecvHandler()
 {
     QByteArray raw = SerialPort.readAll();
+    handleData(&raw);
 }
 
 void SerialPortPanel::SerialPortErrorHandler(QSerialPort::SerialPortError error)
