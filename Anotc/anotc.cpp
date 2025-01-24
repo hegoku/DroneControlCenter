@@ -25,7 +25,7 @@ struct anotc_decode_data
     unsigned long receive_count;
     unsigned int receive_error_count;
 
-    void (*handler)(union _un_anotc_v8_frame *frame);
+    // void (*handler)(union _un_anotc_v8_frame *frame);
 };
 
 static struct anotc_decode_data _decode_data = {
@@ -35,6 +35,8 @@ static struct anotc_decode_data _decode_data = {
     .receive_count = 0,
     .receive_error_count = 0
 };
+
+QList<union _un_anotc_v8_frame> anotc_queue;
 
 static inline int _sum_check(union _un_anotc_v8_frame *frame, unsigned char sum_check, unsigned char add_check);
 
@@ -79,7 +81,8 @@ void anotc_parse_data(QByteArray *data)
             real_data = &_decode_data.frame.rawBytes[ANOTC_V8_HEAD_SIZE];
             if (_sum_check(&_decode_data.frame, _decode_data.sum_check, _decode_data.add_check))
             {
-                _decode_data.handler(&_decode_data.frame);
+                anotc_queue.append(_decode_data.frame);
+                // _decode_data.handler(&_decode_data.frame);
             } else {
                 _decode_data.receive_error_count++;
             }
@@ -125,7 +128,7 @@ unsigned int anotc_receive_error_count()
     return _decode_data.receive_error_count;
 }
 
-void anotc_set_hander(void (*handler)(union _un_anotc_v8_frame *frame))
-{
-    _decode_data.handler = handler;
-}
+// void anotc_set_hander(void (*handler)(union _un_anotc_v8_frame *frame))
+// {
+//     _decode_data.handler = handler;
+// }

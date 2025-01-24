@@ -57,6 +57,29 @@
      </widget>
     </widget>
    </widget>
+   <widget class="DroneModel" name="widget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>10</y>
+      <width>311</width>
+      <height>241</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="logView">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>250</y>
+      <width>211</width>
+      <height>281</height>
+     </rect>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -64,7 +87,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>24</height>
+     <height>37</height>
     </rect>
    </property>
   </widget>
@@ -81,6 +104,12 @@
    <class>UDPPanel</class>
    <extends>QWidget</extends>
    <header>Widgets/udppanel.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>DroneModel</class>
+   <extends>QWidget</extends>
+   <header>Widgets/dronemodel.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

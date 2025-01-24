@@ -4,7 +4,10 @@
 #include <QMainWindow>
 #include <QList>
 #include <QTimer>
+#include <QMutex>
 #include "Anotc/anotc.h"
+
+Q_DECLARE_METATYPE(union _un_anotc_v8_frame);
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -26,12 +29,17 @@ private slots:
     void onUDPConnect();
     void onUDPDisconnect();
     void anotcTimerHanlder();
+    void showLog(_un_anotc_v8_frame*);
+
+signals:
+    void onDataComing(_un_anotc_v8_frame*);
 
 private:
     Ui::MainWindow *ui;
 
-    static void anotc_handler(union _un_anotc_v8_frame *frame);
-    static QList<union _un_anotc_v8_frame> anotc_queue;
+    // static void anotc_handler(union _un_anotc_v8_frame *frame);
+    // static QList<union _un_anotc_v8_frame> anotc_queue;
+    static QMutex anotc_queue_mutex;
 
     QTimer *timer;
 

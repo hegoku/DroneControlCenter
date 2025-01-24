@@ -9,9 +9,9 @@ UDPPanel::UDPPanel(QWidget *parent)
 {
     ui->setupUi(this);
     udpSocket = new QUdpSocket(this);
-    connect(ui->ConnectBtn, SIGNAL(clicked()), this, SLOT(connectUDP()));
     connect(udpSocket, &QUdpSocket::readyRead, this, &UDPPanel::handleUDPData);
     connect(udpSocket, SIGNAL(errorOccurred(QAbstractSocket::SocketError)), this, SLOT(udp_error_handler(QAbstractSocket::SocketError)));
+    connect(ui->ConnectBtn, SIGNAL(clicked()), this, SLOT(connectUDP()));
 }
 
 UDPPanel::~UDPPanel()
@@ -27,7 +27,7 @@ void UDPPanel::connectUDP()
         return;
     }
     if (ui->ConnectBtn->text().compare("Connect")==0) {
-        if (!udpSocket->bind(QHostAddress::AnyIPv4, port)) {
+        if (!udpSocket->bind(QHostAddress::Any, port, QUdpSocket::ShareAddress)) {
             QMessageBox::information(this, "Info", "Failed to connect to broadcast", QMessageBox::NoButton, QMessageBox::Close);
             return;
         }
@@ -52,6 +52,7 @@ void UDPPanel::handleUDPData()
         QByteArray data;
         data.resize(udpSocket->pendingDatagramSize());
         udpSocket->readDatagram(data.data(), data.size(), &hostAddress, &hostPort);
+        qDebug("1");
         handleData(&data);
     }
 }

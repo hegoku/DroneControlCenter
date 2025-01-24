@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "Anotc/anotc.h"
 #include <qDebug>
+#include <QScrollBar>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -14,13 +15,14 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->UDPWidget, SIGNAL(onConnect()), this, SLOT(onUDPConnect()));
     connect(ui->UDPWidget, SIGNAL(onDisconnect()), this, SLOT(onUDPDisconnect()));
 
+    connect(this, SIGNAL(onDataComing(_un_anotc_v8_frame*)), this, SLOT(showLog(_un_anotc_v8_frame*)));
+
     timer = new QTimer();
     timer->setInterval(10);
     timer->setSingleShot(true);
     connect(timer, SIGNAL(timeout()), this, SLOT(anotcTimerHanlder()));
 
-    anotc_set_hander(anotc_handler);
-    ui->serialPortWidget->handleData = anotc_parse_data;
+    ui->serialPortWidget->setDataHandler(anotc_parse_data);
     ui->UDPWidget->handleData = anotc_parse_data;
 }
 
@@ -55,19 +57,26 @@ void MainWindow::onUDPDisconnect()
     ui->SerialPortTab->setEnabled(true);
 }
 
-QList<union _un_anotc_v8_frame> MainWindow::anotc_queue = QList<union _un_anotc_v8_frame>();
-
-void MainWindow::anotc_handler(union _un_anotc_v8_frame *frame)
-{
-    MainWindow::anotc_queue.append(*frame);
-}
-
 void MainWindow::anotcTimerHanlder()
 {
     union _un_anotc_v8_frame data;
-    while(MainWindow::anotc_queue.isEmpty()==false) {
-        data = MainWindow::anotc_queue.first();
-        MainWindow::anotc_queue.removeFirst();
+    while(anotc_queue.isEmpty()==false) {
+        data = anotc_queue.first();
+        emit onDataComing(&data);
+        anotc_queue.removeFirst();
     }
     timer->start();
+}
+
+void MainWindow::showLog(union _un_anotc_v8_frame *frame)
+{
+    if (frame->frame.fun==ANOTC_FRAME_LOG_STRING) {
+        unsigned int color = frame->frame.data[0];
+        int string_len = frame->frame.len - 1;
+        ui->logView->insertPlainText(QString::fromLocal8Bit((char*)(frame->frame.data+1), string_len));
+        QScrollBar *scrollbar = ui->logView->verticalScrollBar();
+        if (scrollbar) {
+            scrollbar->setSliderPosition(scrollbar->maximum());
+        }
+    }
 }

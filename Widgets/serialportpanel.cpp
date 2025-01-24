@@ -1,6 +1,7 @@
 #include "serialportpanel.h"
 #include "ui_serialportpanel.h"
 #include <QMessageBox>
+#include "serialportworker.h"
 
 SerialPortPanel::SerialPortPanel(QWidget *parent)
     : QWidget(parent)
@@ -8,10 +9,16 @@ SerialPortPanel::SerialPortPanel(QWidget *parent)
 {
     ui->setupUi(this);
     connect(ui->serialPortConnectButton, SIGNAL(clicked()), this, SLOT(ClickButton_connect_serial_port()));
+    connect(ui->refreshSerialPortButton, SIGNAL(clicked()), this, SLOT(ClickButton_refresh_serial_port()));
 
     refreshSerialPort();
-    connect(&SerialPort, SIGNAL(readyRead()), this, SLOT(SerialRecvHandler()));
     connect(&SerialPort, SIGNAL(errorOccurred(QSerialPort::SerialPortError)), this, SLOT(SerialPortErrorHandler(QSerialPort::SerialPortError)));
+
+    worker = new SerialPortWorker(&SerialPort);
+    worker->moveToThread(&serialThread);
+
+    // connect(&serialThread, &QThread::finished, worker, &QObject::deleteLater);
+    connect(&SerialPort, &QSerialPort::readyRead, worker, &SerialPortWorker::doDataReceiveWork);
 }
 
 SerialPortPanel::~SerialPortPanel()
@@ -69,6 +76,7 @@ void SerialPortPanel::ClickButton_connect_serial_port()
         SerialPort.setDataBits(data_bits);
         SerialPort.setStopBits(stop_bit);
         SerialPort.setParity(parity);
+        serialThread.start();
         if (!SerialPort.open(QIODevice::ReadWrite)) {
             QMessageBox::information(this, "Info", "Open Serial Port failed.", QMessageBox::NoButton, QMessageBox::Close);
             return;
@@ -94,15 +102,15 @@ void SerialPortPanel::ClickButton_connect_serial_port()
             return;
         }
         SerialPort.clear();
+        serialThread.quit();
         SerialPort.close();
         emit onDisconnect();
     }
 }
 
-void SerialPortPanel::SerialRecvHandler()
+void SerialPortPanel::setDataHandler(void (*handleData)(QByteArray *data))
 {
-    QByteArray raw = SerialPort.readAll();
-    handleData(&raw);
+    worker->handleData = handleData;
 }
 
 void SerialPortPanel::SerialPortErrorHandler(QSerialPort::SerialPortError error)
@@ -111,6 +119,7 @@ void SerialPortPanel::SerialPortErrorHandler(QSerialPort::SerialPortError error)
     case QSerialPort::NoError:
         break;
     case QSerialPort::ResourceError:
+        serialThread.quit();
         SerialPort.close();
         ui->serialPortComboBox->setEnabled(true);
         ui->refreshSerialPortButton->setEnabled(true);

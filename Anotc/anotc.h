@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <QByteArray>
+#include <QList>
 
 #define ANOTC_DATA_MAX_SIZE 512
 #define ANOTC_V8_HEAD_SIZE 6
@@ -91,5 +92,7 @@ void anotc_parse_data(QByteArray *data);
 void anotc_reset();
 unsigned long anotc_receive_count();
 unsigned int anotc_receive_error_count();
-void anotc_set_hander(void (*handler)(union _un_anotc_v8_frame *frame));
+// void anotc_set_hander(void (*handler)(union _un_anotc_v8_frame *frame));
+
+extern QList<union _un_anotc_v8_frame> anotc_queue;
 #endif // ANOTC_H

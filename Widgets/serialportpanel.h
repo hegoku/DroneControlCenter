@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <QtSerialPort/QSerialPortInfo>
 #include <QtSerialPort/QSerialPort>
+#include <QThread>
+#include "serialportworker.h"
 
 namespace Ui {
 class SerialPortPanel;
@@ -18,7 +20,7 @@ public:
     ~SerialPortPanel();
 
     void refreshSerialPort();
-    void (*handleData)(QByteArray *data);
+    void setDataHandler(void (*handleData)(QByteArray *data));
 
 signals:
     void onConnect();
@@ -29,13 +31,15 @@ private slots:
     void ClickButton_connect_serial_port();
     void SelectSerialPort(int index);
     void SerialPortErrorHandler(QSerialPort::SerialPortError error);
-    void SerialRecvHandler();
 
 private:
     Ui::SerialPortPanel *ui;
     QList<QSerialPortInfo> portList;
     QSerialPortInfo *SerialPortInfo=NULL;
     QSerialPort SerialPort;
+
+    SerialPortWorker *worker;
+    QThread serialThread;
 };
 
 #endif // SERIALPORTPANEL_H
