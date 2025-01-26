@@ -15,19 +15,23 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->UDPWidget, SIGNAL(onConnect()), this, SLOT(onUDPConnect()));
     connect(ui->UDPWidget, SIGNAL(onDisconnect()), this, SLOT(onUDPDisconnect()));
 
-    connect(this, SIGNAL(onDataComing(_un_anotc_v8_frame*)), this, SLOT(showLog(_un_anotc_v8_frame*)));
+    connect(this, &MainWindow::onDataComing, this, &MainWindow::showLog);
+    connect(this, &MainWindow::onDataComing, ui->frameTable, &FrameTable::updateData);
 
     timer = new QTimer();
     timer->setInterval(10);
-    timer->setSingleShot(true);
+    // timer->setSingleShot(true);
     connect(timer, SIGNAL(timeout()), this, SLOT(anotcTimerHanlder()));
 
     ui->serialPortWidget->setDataHandler(anotc_parse_data);
     ui->UDPWidget->handleData = anotc_parse_data;
+
+    ui->frameTable->loadTable();
 }
 
 MainWindow::~MainWindow()
 {
+    timer->stop();
     delete ui;
 }
 
@@ -65,7 +69,7 @@ void MainWindow::anotcTimerHanlder()
         emit onDataComing(&data);
         anotc_queue.removeFirst();
     }
-    timer->start();
+    // timer->start();
 }
 
 void MainWindow::showLog(union _un_anotc_v8_frame *frame)

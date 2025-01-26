@@ -8,14 +8,20 @@ class SerialPortWorker : public QObject
 {
     Q_OBJECT
 public:
-    explicit SerialPortWorker(QSerialPort *ser, QObject *parent = nullptr);
+    explicit SerialPortWorker(QObject *parent = nullptr);
     void (*handleData)(QByteArray *data);
 
+    void setParams(QSerialPortInfo *port_info, int baud_rate, QSerialPort::DataBits data_bits, QSerialPort::StopBits stop_bit, QSerialPort::Parity parity);
+    bool open();
+    bool isOpen();
+    void close();
+
 signals:
-    void sendResultToGUI(QByteArray raw);
+    void serialClosed();
 
 public slots:
     void doDataReceiveWork();
+    void SerialPortErrorHandler(QSerialPort::SerialPortError error);
 
 private:
     QSerialPort *SerialPort;

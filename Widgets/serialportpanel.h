@@ -30,7 +30,8 @@ private slots:
     void ClickButton_refresh_serial_port();
     void ClickButton_connect_serial_port();
     void SelectSerialPort(int index);
-    void SerialPortErrorHandler(QSerialPort::SerialPortError error);
+    // void SerialPortErrorHandler(QSerialPort::SerialPortError error);
+    void onSerialClosed();
 
 private:
     Ui::SerialPortPanel *ui;

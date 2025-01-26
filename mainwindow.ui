@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>1072</width>
+    <height>694</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="SerialPortTab">
      <attribute name="title">
@@ -57,28 +57,61 @@
      </widget>
     </widget>
    </widget>
-   <widget class="DroneModel" name="widget" native="true">
-    <property name="geometry">
-     <rect>
-      <x>270</x>
-      <y>10</y>
-      <width>311</width>
-      <height>241</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QTextEdit" name="logView">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>250</y>
       <width>211</width>
-      <height>281</height>
+      <height>371</height>
      </rect>
     </property>
     <property name="readOnly">
      <bool>true</bool>
     </property>
+   </widget>
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>20</y>
+      <width>821</width>
+      <height>601</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="tab">
+     <attribute name="title">
+      <string>Frame View</string>
+     </attribute>
+     <widget class="FrameTable" name="frameTable" native="true">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>811</width>
+        <height>571</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_2">
+     <attribute name="title">
+      <string>Tab 2</string>
+     </attribute>
+     <widget class="DroneModel" name="widget" native="true">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>50</y>
+        <width>311</width>
+        <height>241</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -86,7 +119,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>1072</width>
      <height>37</height>
     </rect>
    </property>
@@ -110,6 +143,12 @@
    <class>DroneModel</class>
    <extends>QWidget</extends>
    <header>Widgets/dronemodel.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>FrameTable</class>
+   <extends>QWidget</extends>
+   <header>Widgets/frametable.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

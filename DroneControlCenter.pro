@@ -10,6 +10,8 @@ CONFIG += c++17
 
 SOURCES += \
     Anotc/anotc.cpp \
+    Anotc/anotc_json.cpp \
+    Widgets/frametable.cpp \
     Widgets/serialportworker.cpp \
     Widgets/dronemodel.cpp \
     Widgets/serialportpanel.cpp \
@@ -19,6 +21,8 @@ SOURCES += \
 
 HEADERS += \
     Anotc/anotc.h \
+    Anotc/anotc_json.h \
+    Widgets/frametable.h \
     Widgets/serialportworker.h \
     Widgets/dronemodel.h \
     Widgets/serialportpanel.h \
@@ -27,6 +31,7 @@ HEADERS += \
 
 FORMS += \
     Widgets/dronemodel.ui \
+    Widgets/frametable.ui \
     Widgets/serialportpanel.ui \
     Widgets/udppanel.ui \
     mainwindow.ui
@@ -41,3 +46,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 macx {
 QMAKE_APPLE_DEVICE_ARCHS = x86_64 arm64
 }
+
+RESOURCES += \
+    mysource.qrc
+
+DISTFILES += \
+    FrameDefination.json
