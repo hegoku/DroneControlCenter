@@ -36,7 +36,7 @@ FORMS += \
     Widgets/udppanel.ui \
     mainwindow.ui
 
-QT += serialport charts network
+QT += serialport charts network 3dcore 3drender 3dinput 3dlogic 3dextras 3danimation
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

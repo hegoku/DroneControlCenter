@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>FrameDefination.json</file>
+        <file>3dmodel/quad_x/quad_x.obj</file>
     </qresource>
 </RCC>
