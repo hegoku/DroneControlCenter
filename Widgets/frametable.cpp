@@ -58,7 +58,7 @@ void FrameTable::loadTable()
         item_value->setEditable(false);
         model->setItem(row, 2, item_value);
 
-        QStandardItem *item_type = new QStandardItem("");
+        QStandardItem *item_type = new QStandardItem("Hz");
         item_type->setEditable(false);
         model->setItem(row, 3, item_type);
 
@@ -104,36 +104,32 @@ void FrameTable::selectionChanged(const QModelIndex &index)
     ui->treeView->isExpanded(index)? ui->treeView->collapse(index) : ui->treeView->expand(index);
 }
 
-void FrameTable::updateData(union _un_anotc_v8_frame *frame)
+void FrameTable::updateData(unsigned char func, QList<anotc_value> frame_value)
 {
-    QList<struct anotc_value> *frame_value = new QList<struct anotc_value>();
     QString value_string;
-    if (anotc_parse_data_frame(frame, frame_value)==0) {
-        if (parameter_counter.contains(frame->frame.fun)) {
-            parameter_counter.insert(frame->frame.fun, parameter_counter.value(frame->frame.fun)+1);
-        } else {
-            parameter_counter.insert(frame->frame.fun, 0);
-        }
-        for (int i=0;i<frame_value->size();i++) {
-            if (frame_value->at(i).type==0) {
-                value_string = QString::number(frame_value->at(i).value.uint8);
-            } else if (frame_value->at(i).type==1) {
-                value_string = QString::number(frame_value->at(i).value.int8);
-            } else if (frame_value->at(i).type==2) {
-                value_string = QString::number(frame_value->at(i).value.uint16);
-            } else if (frame_value->at(i).type==3) {
-                value_string = QString::number(frame_value->at(i).value.int16);
-            } else if (frame_value->at(i).type==4) {
-                value_string = QString::number(frame_value->at(i).value.uint32);
-            } else if (frame_value->at(i).type==5) {
-                value_string = QString::number(frame_value->at(i).value.int32);
-            } else if (frame_value->at(i).type==8) {
-                value_string = QString::number(frame_value->at(i).value.f);
-            }
-            model->item(parameter_item_mapping.value(frame->frame.fun), 0)->child(i, 2)->setText(value_string);
-        }
+    if (parameter_counter.contains(func)) {
+        parameter_counter.insert(func, parameter_counter.value(func)+1);
+    } else {
+        parameter_counter.insert(func, 0);
     }
-    delete frame_value;
+    for (int i=0;i<frame_value.size();i++) {
+        if (frame_value.at(i).type==0) {
+            value_string = QString::number(frame_value.at(i).value.uint8);
+        } else if (frame_value.at(i).type==1) {
+            value_string = QString::number(frame_value.at(i).value.int8);
+        } else if (frame_value.at(i).type==2) {
+            value_string = QString::number(frame_value.at(i).value.uint16);
+        } else if (frame_value.at(i).type==3) {
+            value_string = QString::number(frame_value.at(i).value.int16);
+        } else if (frame_value.at(i).type==4) {
+            value_string = QString::number(frame_value.at(i).value.uint32);
+        } else if (frame_value.at(i).type==5) {
+            value_string = QString::number(frame_value.at(i).value.int32);
+        } else if (frame_value.at(i).type==8) {
+            value_string = QString::number(frame_value.at(i).value.f);
+        }
+        model->item(parameter_item_mapping.value(func), 0)->child(i, 2)->setText(value_string);
+    }
 }
 
 void FrameTable::calculateFreq()

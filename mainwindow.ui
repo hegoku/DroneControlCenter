@@ -92,7 +92,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -111,9 +111,9 @@
     </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">
-      <string>Tab 2</string>
+      <string>3D View</string>
      </attribute>
-     <widget class="DroneModel" name="widget" native="true">
+     <widget class="DroneModel" name="drone_3d_model" native="true">
       <property name="geometry">
        <rect>
         <x>10</x>

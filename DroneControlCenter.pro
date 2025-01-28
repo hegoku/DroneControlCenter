@@ -11,6 +11,10 @@ CONFIG += c++17
 SOURCES += \
     Anotc/anotc.cpp \
     Anotc/anotc_json.cpp \
+    Anotc/anotcthread.cpp \
+    Anotc/blockingqueue.cpp \
+    Widgets/dataanalysicschart.cpp \
+    Widgets/datachartform.cpp \
     Widgets/frametable.cpp \
     Widgets/serialportworker.cpp \
     Widgets/dronemodel.cpp \
@@ -22,6 +26,10 @@ SOURCES += \
 HEADERS += \
     Anotc/anotc.h \
     Anotc/anotc_json.h \
+    Anotc/anotcthread.h \
+    Anotc/blockingqueue.h \
+    Widgets/dataanalysicschart.h \
+    Widgets/datachartform.h \
     Widgets/frametable.h \
     Widgets/serialportworker.h \
     Widgets/dronemodel.h \
@@ -30,6 +38,7 @@ HEADERS += \
     mainwindow.h
 
 FORMS += \
+    Widgets/datachartform.ui \
     Widgets/dronemodel.ui \
     Widgets/frametable.ui \
     Widgets/serialportpanel.ui \

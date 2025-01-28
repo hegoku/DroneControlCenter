@@ -43,7 +43,7 @@
     },
     {
         "id":2,
-        "name":"磁力计",
+        "name":"Compass",
         "desc":"",
         "params":[
             {
@@ -75,7 +75,7 @@
     },
     {
         "id":3,
-        "name":"欧拉角",
+        "name":"Eular",
         "desc":"",
         "params":[
             {
@@ -102,7 +102,7 @@
     },
     {
         "id":5,
-        "name":"高度数据",
+        "name":"Altitude",
         "desc":"",
         "params":[
             {

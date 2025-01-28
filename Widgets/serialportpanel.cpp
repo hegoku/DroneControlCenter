@@ -13,22 +13,17 @@ SerialPortPanel::SerialPortPanel(QWidget *parent)
     connect(ui->refreshSerialPortButton, SIGNAL(clicked()), this, SLOT(ClickButton_refresh_serial_port()));
 
     refreshSerialPort();
-    // connect(&SerialPort, SIGNAL(errorOccurred(QSerialPort::SerialPortError)), this, SLOT(SerialPortErrorHandler(QSerialPort::SerialPortError)));
 
     worker = new SerialPortWorker();
     worker->moveToThread(&serialThread);
     connect(worker, &SerialPortWorker::serialClosed, this, &SerialPortPanel::onSerialClosed);
     serialThread.start();
-
-    // connect(&serialThread, &QThread::finished, worker, &QObject::deleteLater);
-    // connect(&SerialPort, &QSerialPort::readyRead, worker, &SerialPortWorker::doDataReceiveWork);
 }
 
 SerialPortPanel::~SerialPortPanel()
 {
     serialThread.quit();
     serialThread.wait();
-    // SerialPort.close();
     delete ui;
 }
 
@@ -100,28 +95,6 @@ void SerialPortPanel::ClickButton_connect_serial_port()
                 }
             }
         }, Qt::QueuedConnection);
-        // if (SerialPort.isOpen()) {
-        //     QMessageBox::information(this, "Info", "The Serial Port has been opened.", QMessageBox::NoButton, QMessageBox::Close);
-        //     return;
-        // }
-        // SerialPort.setPort(*SerialPortInfo);
-        // SerialPort.setBaudRate(ui->lineEditBaudRate->text().toInt());
-        // SerialPort.setDataBits(data_bits);
-        // SerialPort.setStopBits(stop_bit);
-        // SerialPort.setParity(parity);
-        // serialThread.start();
-        // if (!SerialPort.open(QIODevice::ReadWrite)) {
-        //     QMessageBox::information(this, "Info", "Open Serial Port failed.", QMessageBox::NoButton, QMessageBox::Close);
-        //     return;
-        // }
-        // ui->serialPortComboBox->setEnabled(false);
-        // ui->refreshSerialPortButton->setEnabled(false);
-        // ui->lineEditBaudRate->setEnabled(false);
-        // ui->DataBitsSelection->setEnabled(false);
-        // ui->ParitySelection->setEnabled(false);
-        // ui->StopBitSelection->setEnabled(false);
-        // ui->serialPortConnectButton->setText("Disconnect");
-        // emit onConnect();
     } else {
         ui->serialPortComboBox->setEnabled(true);
         ui->refreshSerialPortButton->setEnabled(true);
@@ -143,14 +116,6 @@ void SerialPortPanel::ClickButton_connect_serial_port()
                 }, Qt::QueuedConnection);
             }
         }, Qt::QueuedConnection);
-        // if (!SerialPort.isOpen()) {
-        //     QMessageBox::information(this, "Info", "The Serial Port is closed", QMessageBox::NoButton, QMessageBox::Close);
-        //     return;
-        // }
-        // SerialPort.clear();
-        // serialThread.quit();
-        // SerialPort.close();
-        // emit onDisconnect();
     }
 }
 
@@ -158,26 +123,6 @@ void SerialPortPanel::setDataHandler(void (*handleData)(QByteArray *data))
 {
     worker->handleData = handleData;
 }
-
-// void SerialPortPanel::SerialPortErrorHandler(QSerialPort::SerialPortError error)
-// {
-//     switch (error) {
-//     case QSerialPort::NoError:
-//         break;
-//     case QSerialPort::ResourceError:
-//         serialThread.quit();
-//         SerialPort.close();
-//         ui->serialPortComboBox->setEnabled(true);
-//         ui->refreshSerialPortButton->setEnabled(true);
-//         ui->lineEditBaudRate->setEnabled(true);
-//         ui->DataBitsSelection->setEnabled(true);
-//         ui->ParitySelection->setEnabled(true);
-//         ui->StopBitSelection->setEnabled(true);
-//         ui->serialPortConnectButton->setText("Connect");
-//         emit onDisconnect();
-//         break;
-//     }
-// }
 
 void SerialPortPanel::onSerialClosed()
 {

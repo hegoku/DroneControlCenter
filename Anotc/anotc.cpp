@@ -24,8 +24,7 @@ struct anotc_decode_data
 
     unsigned long receive_count;
     unsigned int receive_error_count;
-
-    // void (*handler)(union _un_anotc_v8_frame *frame);
+    unsigned int receive_exceed_count;
 };
 
 static struct anotc_decode_data _decode_data = {
@@ -33,10 +32,11 @@ static struct anotc_decode_data _decode_data = {
     .frame_index = 0,
     .frame_read_count = 0,
     .receive_count = 0,
-    .receive_error_count = 0
+    .receive_error_count = 0,
+    .receive_exceed_count = 0
 };
 
-QList<union _un_anotc_v8_frame> anotc_queue;
+BlockingQueue anotc_queue;
 
 static inline int _sum_check(union _un_anotc_v8_frame *frame, unsigned char sum_check, unsigned char add_check);
 
@@ -65,7 +65,9 @@ void anotc_parse_data(QByteArray *data)
             _decode_data.frame.rawBytes[_decode_data.frame_index++] = (unsigned char)data->at(i);
             _decode_data.status = READ_DATA;
         } else if (_decode_data.status == READ_DATA) { //read data
-            _decode_data.frame.rawBytes[_decode_data.frame_index++] = (unsigned char)data->at(i);
+            if (_decode_data.frame_read_count<ANOTC_DATA_MAX_SIZE) {
+                _decode_data.frame.rawBytes[_decode_data.frame_index++] = (unsigned char)data->at(i);
+            }
             _decode_data.frame_read_count++;
             if (_decode_data.frame_read_count==_decode_data.frame.frame.len) {
                 _decode_data.status = SUM_CHECK;
@@ -77,14 +79,17 @@ void anotc_parse_data(QByteArray *data)
             _decode_data.add_check = (unsigned char)data->at(i);
             _decode_data.receive_count++;
 
-            //handle data
-            real_data = &_decode_data.frame.rawBytes[ANOTC_V8_HEAD_SIZE];
-            if (_sum_check(&_decode_data.frame, _decode_data.sum_check, _decode_data.add_check))
-            {
-                anotc_queue.append(_decode_data.frame);
-                // _decode_data.handler(&_decode_data.frame);
+            if (_decode_data.frame_read_count>ANOTC_DATA_MAX_SIZE) {
+                _decode_data.receive_exceed_count++;
             } else {
-                _decode_data.receive_error_count++;
+                //handle data
+                real_data = &_decode_data.frame.rawBytes[ANOTC_V8_HEAD_SIZE];
+                if (_sum_check(&_decode_data.frame, _decode_data.sum_check, _decode_data.add_check))
+                {
+                    anotc_queue.put(_decode_data.frame);
+                } else {
+                    _decode_data.receive_error_count++;
+                }
             }
 
             anotc_reset();
@@ -128,9 +133,7 @@ unsigned int anotc_receive_error_count()
     return _decode_data.receive_error_count;
 }
 
-// void anotc_set_hander(void (*handler)(union _un_anotc_v8_frame *frame))
-// {
-//     _decode_data.handler = handler;
-// }
-
-
+unsigned int anotc_receive_exceed_count()
+{
+    return _decode_data.receive_exceed_count;
+}

@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <QByteArray>
 #include <QList>
+#include <QMetaType>
+#include "Anotc/blockingqueue.h"
 
 #define ANOTC_DATA_MAX_SIZE 512
 #define ANOTC_V8_HEAD_SIZE 6
@@ -39,6 +41,8 @@ union _un_anotc_v8_frame{
     struct anotc_frame frame;
     unsigned char rawBytes[sizeof(struct anotc_frame)];
 };
+
+Q_DECLARE_METATYPE(union _un_anotc_v8_frame);
 
 #define PREPARE_ANOTC_FRAME(frame) { \
 frame.head = ANOTC_V8_HEAD;\
@@ -92,7 +96,7 @@ void anotc_parse_data(QByteArray *data);
 void anotc_reset();
 unsigned long anotc_receive_count();
 unsigned int anotc_receive_error_count();
-// void anotc_set_hander(void (*handler)(union _un_anotc_v8_frame *frame));
+unsigned int anotc_receive_exceed_count();
 
-extern QList<union _un_anotc_v8_frame> anotc_queue;
+extern BlockingQueue anotc_queue;
 #endif // ANOTC_H

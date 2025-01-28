@@ -5,6 +5,7 @@
 #include <Qt3DRender/qpointlight.h>
 #include <Qt3DExtras/qfirstpersoncameracontroller.h>
 #include <Qt3DExtras/QDiffuseMapMaterial>
+#include "Anotc/anotc.h"
 
 DroneModel::DroneModel(QWidget *parent)
     : QWidget(parent)
@@ -84,11 +85,21 @@ void DroneModel::initializate(const QString & obj_url)
 
     db.m_windowOn3D->setRootEntity(db.m_rootEntity);
 
+    db.m_trans->translation();
+
 }
 
 void DroneModel::rotateModel(float x, float y, float z)
 {
     db.m_trans->setRotationX(x);
-    db.m_trans->setRotationX(y);
-    db.m_trans->setRotationX(z);
+    db.m_trans->setRotationY(y);
+    db.m_trans->setRotationZ(z);
+    db.m_trans->translation();
+}
+
+void DroneModel::onAttitudeUpdate(unsigned char func, QList<anotc_value> value)
+{
+    if (func==ANOTC_FRAME_EULER) {
+        rotateModel(value.at(1).value.f, value.at(2).value.f, value.at(0).value.f);
+    }
 }

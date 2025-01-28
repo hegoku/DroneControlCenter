@@ -5,7 +5,7 @@
 #include <QStandardItemModel>
 #include <QModelIndex>
 #include <QHash>
-#include "Anotc/anotc.h"
+#include <Anotc/anotc_json.h>
 #include <QTimer>
 
 namespace Ui {
@@ -23,7 +23,7 @@ public:
 
 public slots:
     void selectionChanged(const QModelIndex &index);
-    void updateData(_un_anotc_v8_frame *frame);
+    void updateData(unsigned char func, QList<anotc_value> value);
     void calculateFreq();
 
 private:
