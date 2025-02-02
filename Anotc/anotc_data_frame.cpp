@@ -5,7 +5,7 @@
 #include <QJsonObject>
 #include <QHash>
 #include "Anotc/anotc.h"
-#include "Anotc/anotc_json.h"
+#include "Anotc/anotc_data_frame.h"
 
 QMap<unsigned char, struct anotc_frame_defination*> anotc_frame_defination_list;
 
@@ -31,10 +31,12 @@ unsigned char mappingParamType(QString type)
         return 8;
     } else if (type.compare(QString::fromLocal8Bit("Double"))==0) {
         return 9;
+    } else if (type.compare(QString::fromLocal8Bit("String"))==0) {
+        return 10;
     }
 }
 
-void loadFrameDefination(QString path)
+void loadDataFrameDefination(QString path)
 {
     QString val;
     QFile file;
@@ -122,6 +124,51 @@ int anotc_parse_data_frame(union _un_anotc_v8_frame *frame, QList<struct anotc_v
             value.value.int32 |= ((int)frame->frame.data[index++])<<16;
             if (index+1>frame->frame.len) break;
             value.value.int32 |= ((int)frame->frame.data[index++])<<24;
+        } else if (param->type.compare(QString::fromLocal8Bit("UInt64"))==0) {
+            value.type = 6;
+            value.value.uint64 = frame->frame.data[index++];
+            if (index+1>frame->frame.len) break;
+            value.value.uint64 |= ((uint64_t)frame->frame.data[index++])<<8;
+            if (index+1>frame->frame.len) break;
+            value.value.uint64 |= ((uint64_t)frame->frame.data[index++])<<16;
+            if (index+1>frame->frame.len) break;
+            value.value.uint64 |= ((uint64_t)frame->frame.data[index++])<<24;
+            if (index+1>frame->frame.len) break;
+            value.value.uint64 |= ((uint64_t)frame->frame.data[index++])<<32;
+            if (index+1>frame->frame.len) break;
+            value.value.uint64 |= ((uint64_t)frame->frame.data[index++])<<40;
+            if (index+1>frame->frame.len) break;
+            value.value.uint64 |= ((uint64_t)frame->frame.data[index++])<<48;
+            if (index+1>frame->frame.len) break;
+            value.value.uint64 |= ((uint64_t)frame->frame.data[index++])<<56;
+        } else if (param->type.compare(QString::fromLocal8Bit("Int64"))==0) {
+            value.type = 7;
+            value.value.int64 = frame->frame.data[index++];
+            if (index+1>frame->frame.len) break;
+            value.value.int64 |= ((int64_t)frame->frame.data[index++])<<8;
+            if (index+1>frame->frame.len) break;
+            value.value.int64 |= ((int64_t)frame->frame.data[index++])<<16;
+            if (index+1>frame->frame.len) break;
+            value.value.int64 |= ((int64_t)frame->frame.data[index++])<<24;
+            if (index+1>frame->frame.len) break;
+            value.value.int64 |= ((int64_t)frame->frame.data[index++])<<32;
+            if (index+1>frame->frame.len) break;
+            value.value.int64 |= ((int64_t)frame->frame.data[index++])<<40;
+            if (index+1>frame->frame.len) break;
+            value.value.int64 |= ((int64_t)frame->frame.data[index++])<<48;
+            if (index+1>frame->frame.len) break;
+            value.value.int64 |= ((int64_t)frame->frame.data[index++])<<56;
+        } else if (param->type.compare(QString::fromLocal8Bit("Float"))==0) {
+            value.type = 8;
+            uint32_t tmp = frame->frame.data[index++];
+            tmp = frame->frame.data[index++];
+            if (index+1>frame->frame.len) break;
+            tmp |= ((uint32_t)frame->frame.data[index++])<<8;
+            if (index+1>frame->frame.len) break;
+            tmp |= ((uint32_t)frame->frame.data[index++])<<16;
+            if (index+1>frame->frame.len) break;
+            tmp |= ((uint32_t)frame->frame.data[index++])<<24;
+            value.value.f = *((float*)&tmp);
         }
         frame_value->append(value);
     }

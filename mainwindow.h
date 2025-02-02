@@ -29,7 +29,7 @@ private slots:
     void onUDPConnect();
     void onUDPDisconnect();
     void anotcTimerHanlder();
-    void showLog(_un_anotc_v8_frame);
+    void showLog(struct anotc_blocking_queue_item);
 
 private:
     Ui::MainWindow *ui;
@@ -38,6 +38,11 @@ private:
     AnotcThread *anotc_thread;
 
     QLabel *anotc_status_label;
+
+    static void sendData(const QByteArray &data);
+    static void printLog(QString content);
+
+    static MainWindow *instance;
 
 };
 #endif // MAINWINDOW_H

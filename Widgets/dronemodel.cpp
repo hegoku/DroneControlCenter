@@ -97,9 +97,9 @@ void DroneModel::rotateModel(float x, float y, float z)
     db.m_trans->translation();
 }
 
-void DroneModel::onAttitudeUpdate(unsigned char func, QList<anotc_value> value)
+void DroneModel::onAttitudeUpdate(struct anotc_parsed_data_frame item)
 {
-    if (func==ANOTC_FRAME_EULER) {
-        rotateModel(value.at(1).value.f, value.at(2).value.f, value.at(0).value.f);
+    if (item.func==ANOTC_FRAME_EULER) {
+        rotateModel(item.frame_value.at(1).value.f, item.frame_value.at(2).value.f, item.frame_value.at(0).value.f);
     }
 }

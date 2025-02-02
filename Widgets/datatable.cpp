@@ -1,10 +1,10 @@
-#include "frametable.h"
-#include "ui_frametable.h"
-#include "Anotc/anotc_json.h"
+#include "datatable.h"
+#include "ui_datatable.h"
+#include "Anotc/anotc_data_frame.h"
 
-FrameTable::FrameTable(QWidget *parent)
+DataTable::DataTable(QWidget *parent)
     : QWidget(parent)
-    , ui(new Ui::FrameTable)
+    , ui(new Ui::DataTable)
 {
     ui->setupUi(this);
 
@@ -24,7 +24,7 @@ FrameTable::FrameTable(QWidget *parent)
     // ui->tableView->horizontalHeader()->setStretchLastSection(true);
     // ui->tableView->horizontalHeader()->setSectionsClickable(true);
 
-    connect(ui->treeView, &QTreeView::clicked, this, &FrameTable::selectionChanged);
+    connect(ui->treeView, &QTreeView::clicked, this, &DataTable::selectionChanged);
 
     model->setColumnCount(5);
     model->setHeaderData(0, Qt::Horizontal, "ID");
@@ -36,13 +36,13 @@ FrameTable::FrameTable(QWidget *parent)
     timer->start();
 }
 
-FrameTable::~FrameTable()
+DataTable::~DataTable()
 {
     timer->stop();
     delete ui;
 }
 
-void FrameTable::loadTable()
+void DataTable::loadTable()
 {
     int row = 0;
     for (QMap<unsigned char, struct anotc_frame_defination*>::const_iterator i = anotc_frame_defination_list.constBegin();i!=anotc_frame_defination_list.constEnd();i++) {
@@ -99,40 +99,40 @@ void FrameTable::loadTable()
     }
 }
 
-void FrameTable::selectionChanged(const QModelIndex &index)
+void DataTable::selectionChanged(const QModelIndex &index)
 {
     ui->treeView->isExpanded(index)? ui->treeView->collapse(index) : ui->treeView->expand(index);
 }
 
-void FrameTable::updateData(unsigned char func, QList<anotc_value> frame_value)
+void DataTable::updateData(struct anotc_parsed_data_frame item)
 {
     QString value_string;
-    if (parameter_counter.contains(func)) {
-        parameter_counter.insert(func, parameter_counter.value(func)+1);
+    if (parameter_counter.contains(item.func)) {
+        parameter_counter.insert(item.func, parameter_counter.value(item.func)+1);
     } else {
-        parameter_counter.insert(func, 0);
+        parameter_counter.insert(item.func, 0);
     }
-    for (int i=0;i<frame_value.size();i++) {
-        if (frame_value.at(i).type==0) {
-            value_string = QString::number(frame_value.at(i).value.uint8);
-        } else if (frame_value.at(i).type==1) {
-            value_string = QString::number(frame_value.at(i).value.int8);
-        } else if (frame_value.at(i).type==2) {
-            value_string = QString::number(frame_value.at(i).value.uint16);
-        } else if (frame_value.at(i).type==3) {
-            value_string = QString::number(frame_value.at(i).value.int16);
-        } else if (frame_value.at(i).type==4) {
-            value_string = QString::number(frame_value.at(i).value.uint32);
-        } else if (frame_value.at(i).type==5) {
-            value_string = QString::number(frame_value.at(i).value.int32);
-        } else if (frame_value.at(i).type==8) {
-            value_string = QString::number(frame_value.at(i).value.f);
+    for (int i=0;i<item.frame_value.size();i++) {
+        if (item.frame_value.at(i).type==0) {
+            value_string = QString::number(item.frame_value.at(i).value.uint8);
+        } else if (item.frame_value.at(i).type==1) {
+            value_string = QString::number(item.frame_value.at(i).value.int8);
+        } else if (item.frame_value.at(i).type==2) {
+            value_string = QString::number(item.frame_value.at(i).value.uint16);
+        } else if (item.frame_value.at(i).type==3) {
+            value_string = QString::number(item.frame_value.at(i).value.int16);
+        } else if (item.frame_value.at(i).type==4) {
+            value_string = QString::number(item.frame_value.at(i).value.uint32);
+        } else if (item.frame_value.at(i).type==5) {
+            value_string = QString::number(item.frame_value.at(i).value.int32);
+        } else if (item.frame_value.at(i).type==8) {
+            value_string = QString::number(item.frame_value.at(i).value.f);
         }
-        model->item(parameter_item_mapping.value(func), 0)->child(i, 2)->setText(value_string);
+        model->item(parameter_item_mapping.value(item.func), 0)->child(i, 2)->setText(value_string);
     }
 }
 
-void FrameTable::calculateFreq()
+void DataTable::calculateFreq()
 {
     unsigned long int current_count = 0;
     unsigned int freq = 0;

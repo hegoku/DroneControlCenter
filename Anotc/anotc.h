@@ -25,6 +25,11 @@
 
 #define ANOTC_FRAME_RC 0x40
 
+#define ANOTC_FRAME_CONFIG_CMD 0xE0
+#define ANOTC_FRAME_CONFIG_READ_WRITE 0xE1
+#define ANOTC_FRAME_CONFIG_INFO 0xE2
+#define ANOTC_FRAME_DEVICE_INFO 0xE3
+
 #define ANOTC_FRAME_LOG_STRING 0xA0
 #define ANOTC_FRAME_LOG_STRING_NUM 0xA1
 
@@ -44,9 +49,15 @@ union _un_anotc_v8_frame{
 
 Q_DECLARE_METATYPE(union _un_anotc_v8_frame);
 
+struct anotc_blocking_queue_item {
+    qint64 timestamp;
+    union _un_anotc_v8_frame frame;
+};
+Q_DECLARE_METATYPE(struct anotc_blocking_queue_item);
+
 #define PREPARE_ANOTC_FRAME(frame) { \
 frame.head = ANOTC_V8_HEAD;\
-    frame.s_addr = 0xAF;\
+    frame.s_addr = 0xFE;\
     frame.d_addr = 0x01;\
     frame.len = 0;\
 }
@@ -98,5 +109,6 @@ unsigned long anotc_receive_count();
 unsigned int anotc_receive_error_count();
 unsigned int anotc_receive_exceed_count();
 
-extern BlockingQueue anotc_queue;
+extern BlockingQueue<struct anotc_blocking_queue_item> anotc_queue;
+extern void (*anotc_send_func)(unsigned char *data, int len);
 #endif // ANOTC_H

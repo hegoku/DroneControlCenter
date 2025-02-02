@@ -1,9 +1,10 @@
-#ifndef ANOTC_JSON_H
-#define ANOTC_JSON_H
+#ifndef ANOTC_DATA_FRAME_H
+#define ANOTC_DATA_FRAME_H
 
 #include <QString>
 #include <QList>
 #include <QMap>
+#include <QMetaType>
 
 struct anotc_frame_param {
     QString name;
@@ -36,7 +37,14 @@ struct anotc_value {
     } value;
 };
 
-void loadFrameDefination(QString path);
+struct anotc_parsed_data_frame {
+    qint64 timestamp;
+    unsigned char func;
+    QList<struct anotc_value> frame_value;
+};
+Q_DECLARE_METATYPE(struct anotc_parsed_data_frame);
+
+void loadDataFrameDefination(QString path);
 int anotc_parse_data_frame(union _un_anotc_v8_frame *frame, QList<struct anotc_value> *frame_value);
 
 void anotc_euler_formater(QList<struct anotc_value> *frame_value);
@@ -44,4 +52,4 @@ void anotc_alt_formater(QList<struct anotc_value> *frame_value);
 
 extern QMap<unsigned char, struct anotc_frame_defination*> anotc_frame_defination_list;
 
-#endif // ANOTC_JSON_H
+#endif // ANOTC_DATA_FRAME_H

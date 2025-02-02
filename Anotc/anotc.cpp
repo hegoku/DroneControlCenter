@@ -1,4 +1,5 @@
 #include "anotc.h"
+#include <QDateTime>
 
 enum anotc_decode_status
 {
@@ -36,13 +37,13 @@ static struct anotc_decode_data _decode_data = {
     .receive_exceed_count = 0
 };
 
-BlockingQueue anotc_queue;
+BlockingQueue<struct anotc_blocking_queue_item> anotc_queue;
 
 static inline int _sum_check(union _un_anotc_v8_frame *frame, unsigned char sum_check, unsigned char add_check);
 
 void anotc_parse_data(QByteArray *data)
 {
-    unsigned char *real_data = 0;
+    struct anotc_blocking_queue_item item;
     for (int i = 0; i < data->size(); i++)
     {
         if (_decode_data.status==HEAD) {
@@ -82,11 +83,11 @@ void anotc_parse_data(QByteArray *data)
             if (_decode_data.frame_read_count>ANOTC_DATA_MAX_SIZE) {
                 _decode_data.receive_exceed_count++;
             } else {
-                //handle data
-                real_data = &_decode_data.frame.rawBytes[ANOTC_V8_HEAD_SIZE];
                 if (_sum_check(&_decode_data.frame, _decode_data.sum_check, _decode_data.add_check))
                 {
-                    anotc_queue.put(_decode_data.frame);
+                    item.frame = _decode_data.frame;
+                    item.timestamp = QDateTime::currentMSecsSinceEpoch();
+                    anotc_queue.put(item);
                 } else {
                     _decode_data.receive_error_count++;
                 }
@@ -137,3 +138,5 @@ unsigned int anotc_receive_exceed_count()
 {
     return _decode_data.receive_exceed_count;
 }
+
+void (*anotc_send_func)(unsigned char *data, int len) = 0;

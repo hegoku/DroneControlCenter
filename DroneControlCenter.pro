@@ -10,12 +10,15 @@ CONFIG += c++17
 
 SOURCES += \
     Anotc/anotc.cpp \
-    Anotc/anotc_json.cpp \
+    Anotc/anotc_config_frame.cpp \
+    Anotc/anotc_data_frame.cpp \
     Anotc/anotcthread.cpp \
     Anotc/blockingqueue.cpp \
+    DLog.cpp \
     Widgets/dataanalysicschart.cpp \
     Widgets/datachartform.cpp \
-    Widgets/frametable.cpp \
+    Widgets/datatable.cpp \
+    Widgets/parameterform.cpp \
     Widgets/serialportworker.cpp \
     Widgets/dronemodel.cpp \
     Widgets/serialportpanel.cpp \
@@ -25,12 +28,15 @@ SOURCES += \
 
 HEADERS += \
     Anotc/anotc.h \
-    Anotc/anotc_json.h \
+    Anotc/anotc_config_frame.h \
+    Anotc/anotc_data_frame.h \
     Anotc/anotcthread.h \
     Anotc/blockingqueue.h \
+    DLog.h \
     Widgets/dataanalysicschart.h \
     Widgets/datachartform.h \
-    Widgets/frametable.h \
+    Widgets/datatable.h \
+    Widgets/parameterform.h \
     Widgets/serialportworker.h \
     Widgets/dronemodel.h \
     Widgets/serialportpanel.h \
@@ -39,8 +45,9 @@ HEADERS += \
 
 FORMS += \
     Widgets/datachartform.ui \
+    Widgets/datatable.ui \
     Widgets/dronemodel.ui \
-    Widgets/frametable.ui \
+    Widgets/parameterform.ui \
     Widgets/serialportpanel.ui \
     Widgets/udppanel.ui \
     mainwindow.ui
@@ -60,4 +67,4 @@ RESOURCES += \
     mysource.qrc
 
 DISTFILES += \
-    FrameDefination.json
+    DataFrameDefination.json

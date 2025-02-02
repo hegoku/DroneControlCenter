@@ -92,19 +92,34 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
-      <string>Frame View</string>
+      <string>Data Viewer</string>
      </attribute>
-     <widget class="FrameTable" name="frameTable" native="true">
+     <widget class="DataTable" name="dataTable" native="true">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
         <width>811</width>
         <height>571</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_3">
+     <attribute name="title">
+      <string>Parameter Viewer</string>
+     </attribute>
+     <widget class="ParameterForm" name="parameter_viewer" native="true">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>801</width>
+        <height>521</height>
        </rect>
       </property>
      </widget>
@@ -158,9 +173,15 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>FrameTable</class>
+   <class>DataTable</class>
    <extends>QWidget</extends>
-   <header>Widgets/frametable.h</header>
+   <header>Widgets/datatable.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ParameterForm</class>
+   <extends>QWidget</extends>
+   <header>Widgets/parameterform.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

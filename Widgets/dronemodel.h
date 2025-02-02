@@ -11,7 +11,7 @@
 #include <Qt3DExtras/QPhongMaterial>
 #include <Qt3DCore/QTransform>
 #include <Qt3DInput/QInputAspect>
-#include <Anotc/anotc_json.h>
+#include <Anotc/anotc_data_frame.h>
 
 namespace Ui {
 class DroneModel;
@@ -29,7 +29,7 @@ public:
     void rotateModel(float x, float y, float z);
 
 public slots:
-    void onAttitudeUpdate(unsigned char func, QList<anotc_value> value);
+    void onAttitudeUpdate(struct anotc_parsed_data_frame);
 
 private:
 

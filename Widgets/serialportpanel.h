@@ -21,10 +21,13 @@ public:
 
     void refreshSerialPort();
     void setDataHandler(void (*handleData)(QByteArray *data));
+    void sendData(const QByteArray &value);
 
 signals:
     void onConnect();
     void onDisconnect();
+    void onSendData(const QByteArray &data);
+    void onSetParams(QSerialPortInfo *port_info, int baud_rate, QSerialPort::DataBits data_bits, QSerialPort::StopBits stop_bit, QSerialPort::Parity parity);
 
 private slots:
     void ClickButton_refresh_serial_port();
@@ -39,7 +42,7 @@ private:
     QSerialPort SerialPort;
 
     SerialPortWorker *worker;
-    QThread serialThread;
+    QThread *serialThread;
 };
 
 #endif // SERIALPORTPANEL_H

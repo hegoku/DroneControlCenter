@@ -11,7 +11,6 @@ public:
     explicit SerialPortWorker(QObject *parent = nullptr);
     void (*handleData)(QByteArray *data);
 
-    void setParams(QSerialPortInfo *port_info, int baud_rate, QSerialPort::DataBits data_bits, QSerialPort::StopBits stop_bit, QSerialPort::Parity parity);
     bool open();
     bool isOpen();
     void close();
@@ -20,8 +19,12 @@ signals:
     void serialClosed();
 
 public slots:
+    void init();
+    void setParams(QSerialPortInfo *port_info, int baud_rate, QSerialPort::DataBits data_bits, QSerialPort::StopBits stop_bit, QSerialPort::Parity parity);
     void doDataReceiveWork();
     void SerialPortErrorHandler(QSerialPort::SerialPortError error);
+    void sendData(const QByteArray &data);
+
 
 private:
     QSerialPort *SerialPort;

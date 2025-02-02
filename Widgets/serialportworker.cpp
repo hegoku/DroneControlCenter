@@ -7,7 +7,15 @@ SerialPortWorker::SerialPortWorker(QObject *parent)
     : QObject{parent}
 {
     SerialPort = new QSerialPort(this);
+    // SerialPort->setReadBufferSize(1024*1024);
     handleData = anotc_parse_data;
+    connect(SerialPort, &QSerialPort::readyRead, this, &SerialPortWorker::doDataReceiveWork);
+    connect(SerialPort, SIGNAL(errorOccurred(QSerialPort::SerialPortError)), this, SLOT(SerialPortErrorHandler(QSerialPort::SerialPortError)));
+}
+
+void SerialPortWorker::init()
+{
+    SerialPort = new QSerialPort();
     connect(SerialPort, &QSerialPort::readyRead, this, &SerialPortWorker::doDataReceiveWork);
     connect(SerialPort, SIGNAL(errorOccurred(QSerialPort::SerialPortError)), this, SLOT(SerialPortErrorHandler(QSerialPort::SerialPortError)));
 }
@@ -15,6 +23,7 @@ SerialPortWorker::SerialPortWorker(QObject *parent)
 void SerialPortWorker::doDataReceiveWork()
 {
     if (!SerialPort->isOpen()) return;
+    if (SerialPort->bytesAvailable()==0) return;
     QByteArray raw = SerialPort->readAll();
     handleData(&raw);
 }
@@ -53,5 +62,12 @@ void SerialPortWorker::SerialPortErrorHandler(QSerialPort::SerialPortError error
         SerialPort->close();
         emit serialClosed();
         break;
+    }
+}
+
+void SerialPortWorker::sendData(const QByteArray &data)
+{
+    if (SerialPort->isOpen()) {
+        SerialPort->write(data);
     }
 }

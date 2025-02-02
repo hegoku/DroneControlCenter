@@ -1,33 +1,33 @@
-#ifndef FRAMETABLE_H
-#define FRAMETABLE_H
+#ifndef DATATABLE_H
+#define DATATABLE_H
 
 #include <QWidget>
 #include <QStandardItemModel>
 #include <QModelIndex>
 #include <QHash>
-#include <Anotc/anotc_json.h>
+#include <Anotc/anotc_data_frame.h>
 #include <QTimer>
 
 namespace Ui {
-class FrameTable;
+class DataTable;
 }
 
-class FrameTable : public QWidget
+class DataTable : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit FrameTable(QWidget *parent = nullptr);
-    ~FrameTable();
+    explicit DataTable(QWidget *parent = nullptr);
+    ~DataTable();
     void loadTable();
 
 public slots:
     void selectionChanged(const QModelIndex &index);
-    void updateData(unsigned char func, QList<anotc_value> value);
+    void updateData(struct anotc_parsed_data_frame);
     void calculateFreq();
 
 private:
-    Ui::FrameTable *ui;
+    Ui::DataTable *ui;
 
     QStandardItemModel *model;
 
@@ -38,4 +38,4 @@ private:
     QTimer *timer;
 };
 
-#endif // FRAMETABLE_H
+#endif // DATATABLE_H

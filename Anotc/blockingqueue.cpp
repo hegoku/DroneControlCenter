@@ -1,32 +1,36 @@
 #include "blockingqueue.h"
 #include "Anotc/anotc.h"
 
-BlockingQueue::BlockingQueue() {}
+// template <class T>
+// BlockingQueue<T>::BlockingQueue() {}
 
-void BlockingQueue::put(union _un_anotc_v8_frame value)
-{
-    QMutexLocker locker(&m_mutex);
-    m_queue.enqueue(value);
-    m_condition.wakeOne();
-}
+// template <class T>
+// void BlockingQueue<T>::put(T value)
+// {
+//     QMutexLocker locker(&m_mutex);
+//     m_queue.enqueue(value);
+//     m_condition.wakeOne();
+// }
 
-union _un_anotc_v8_frame BlockingQueue::take()
-{
-    QMutexLocker locker(&m_mutex);
-    while(m_queue.isEmpty()) {
-        m_condition.wait(&m_mutex);
-    }
-    return m_queue.dequeue();
-}
+// template <class T>
+// T BlockingQueue<T>::take()
+// {
+//     QMutexLocker locker(&m_mutex);
+//     while(m_queue.isEmpty()) {
+//         m_condition.wait(&m_mutex);
+//     }
+//     return m_queue.dequeue();
+// }
 
-
-bool BlockingQueue::isEmpty() const
+template <class T>
+bool BlockingQueue<T>::isEmpty() const
 {
     QMutexLocker locker(&m_mutex);
     return m_queue.isEmpty();
 }
 
-int BlockingQueue::size() const
+template <class T>
+int BlockingQueue<T>::size() const
 {
     QMutexLocker locker(&m_mutex);
     return m_queue.size();
