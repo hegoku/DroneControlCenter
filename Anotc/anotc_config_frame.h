@@ -38,6 +38,7 @@ void anotc_send_config_get_param_value(unsigned short par_id);
 void anotc_send_config_get_param_info(unsigned short par_id);
 void anotc_send_config_reset_param();
 void anotc_send_config_save_param();
+void anotc_send_config_set_param(unsigned char par_id, unsigned char type, unsigned char *value);
 
 int anotc_parse_config_frame(union _un_anotc_v8_frame *frame, QList<struct anotc_p_value> *frame_value);
 

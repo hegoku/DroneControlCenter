@@ -13,13 +13,6 @@ SerialPortWorker::SerialPortWorker(QObject *parent)
     connect(SerialPort, SIGNAL(errorOccurred(QSerialPort::SerialPortError)), this, SLOT(SerialPortErrorHandler(QSerialPort::SerialPortError)));
 }
 
-void SerialPortWorker::init()
-{
-    SerialPort = new QSerialPort();
-    connect(SerialPort, &QSerialPort::readyRead, this, &SerialPortWorker::doDataReceiveWork);
-    connect(SerialPort, SIGNAL(errorOccurred(QSerialPort::SerialPortError)), this, SLOT(SerialPortErrorHandler(QSerialPort::SerialPortError)));
-}
-
 void SerialPortWorker::doDataReceiveWork()
 {
     if (!SerialPort->isOpen()) return;

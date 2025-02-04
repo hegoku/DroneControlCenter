@@ -73,6 +73,51 @@ void anotc_send_config_save_param()
     anotc_send_func((unsigned char *)&frame, ANOTC_V8_HEAD_SIZE + frame.len + 2);
 }
 
+void anotc_send_config_set_param(unsigned char par_id, unsigned char type, unsigned char *value)
+{
+    struct anotc_frame frame;
+    PREPARE_ANOTC_FRAME(frame);
+    frame.fun = ANOTC_FRAME_CONFIG_READ_WRITE;
+
+    anotc_add_ushort(&frame, par_id);
+    switch(type) {
+    case 0:
+    case 1:
+        frame.data[frame.len++] = value[0];
+        break;
+    case 2:
+        anotc_add_ushort(&frame, *((unsigned short*)value));
+        break;
+    case 3:
+        anotc_add_short(&frame, *((short*)value));
+        break;
+    case 4:
+        anotc_add_uint(&frame, *((unsigned int*)value));
+        break;
+    case 5:
+        anotc_add_int(&frame, *((int*)value));
+        break;
+    case 6:
+        anotc_add_ulong(&frame, *((uint64_t*)value));
+        break;
+    case 7:
+        anotc_add_long(&frame, *((int64_t*)value));
+        break;
+    case 8:
+        anotc_add_float(&frame, *((float*)value));
+        break;
+    case 9:
+        anotc_add_double(&frame, *((double*)value));
+        break;
+    case 10:
+        anotc_add_string(&frame, (char*)value);
+        break;
+    }
+
+    anotc_add_checksum(&frame);
+    anotc_send_func((unsigned char *)&frame, ANOTC_V8_HEAD_SIZE + frame.len + 2);
+}
+
 int anotc_parse_config_frame(union _un_anotc_v8_frame *frame, QList<struct anotc_p_value> *frame_value)
 {
     struct anotc_p_value value;
@@ -92,7 +137,17 @@ int anotc_parse_config_frame(union _un_anotc_v8_frame *frame, QList<struct anotc
         break;
     }
     case ANOTC_FRAME_CONFIG_READ_WRITE:{
-        unsigned short par_id = frame->frame.data[0] | (((unsigned short)frame->frame.data[1])<<8);
+        value.value.uint16 = frame->frame.data[0] | (((unsigned short)frame->frame.data[1])<<8);
+        value.type = 2;
+        value.name = QString("PAR_ID");
+        value.string.clear();
+        frame_value->append(value);
+
+        value.type = 10;
+        value.string.clear();
+        value.name = QString("PAR_VAL");
+        value.string = QString(QLatin1String((char*)(frame->frame.data+2), frame->frame.len-2));
+        frame_value->append(value);
         break;
     }
     case ANOTC_FRAME_CONFIG_INFO:{
@@ -121,19 +176,6 @@ int anotc_parse_config_frame(union _un_anotc_v8_frame *frame, QList<struct anotc
         value.name = QString("PAR_INFO");
         value.string = QString::fromLocal8Bit((char*)(frame->frame.data+3+20), frame->frame.len-3-20);
         frame_value->append(value);
-        struct anotc_parameter_defination *d;
-        // if (anotc_parameter_defination_list.contains(par_id)) {
-        //     d = anotc_parameter_defination_list.value(par_id);
-        //     d->par_name.clear();
-        //     d->par_info.clear();
-        // } else {
-        //     d = (struct anotc_parameter_defination*)malloc(sizeof(struct anotc_parameter_defination));
-        //     anotc_parameter_defination_list.insert(par_id, d);
-        // }
-        // d->par_id = par_id;
-        // d->type = type;
-        // d->par_name.fromLocal8Bit((char*)(frame->frame.data+3), 20);
-        // d->par_info.fromLocal8Bit((char*)(frame->frame.data+3+20), frame->frame.len-20-3);
         break;
     }
     case ANOTC_FRAME_DEVICE_INFO:{

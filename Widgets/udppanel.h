@@ -17,6 +17,8 @@ public:
     ~UDPPanel();
 
     void (*handleData)(QByteArray *data);
+    bool isOpen();
+    void sendData(const QByteArray &data);
 
 signals:
     void onConnect();

@@ -14,6 +14,7 @@
 #define ANOTC_V8_FRAME_SUMCHECK_INDEX 5
 #define ANOTC_V8_FRAME_ADDCHECK_INDEX 6
 
+#define ANOTC_FRAME_FRAME_CHECK 0x0
 #define ANOTC_FRAME_IMU 0x1;
 #define ANOTC_FRAME_MAG_BAR_TEMP 0x2
 #define ANOTC_FRAME_EULER 0x3
@@ -68,6 +69,12 @@ static inline void anotc_add_float(struct anotc_frame *frame, float data)
     frame->len += sizeof(float);
 }
 
+static inline void anotc_add_double(struct anotc_frame *frame, double data)
+{
+    *(double*)(&(frame->data[frame->len])) = data;
+    frame->len += sizeof(double);
+}
+
 static inline void anotc_add_short(struct anotc_frame *frame, short data)
 {
     *(short int*)(&(frame->data[frame->len])) = data;
@@ -90,6 +97,24 @@ static inline void anotc_add_uint(struct anotc_frame *frame, unsigned int data)
 {
     *(unsigned int*)(&(frame->data[frame->len])) = data;
     frame->len += sizeof(unsigned int);
+}
+
+static inline void anotc_add_ulong(struct anotc_frame *frame, uint64_t data)
+{
+    *(uint64_t*)(&(frame->data[frame->len])) = data;
+    frame->len += sizeof(uint64_t);
+}
+
+static inline void anotc_add_long(struct anotc_frame *frame, int64_t data)
+{
+    *(int64_t*)(&(frame->data[frame->len])) = data;
+    frame->len += sizeof(int64_t);
+}
+
+static inline void anotc_add_string(struct anotc_frame *frame, char *data)
+{
+    strncpy((char *)&(frame->data[frame->len]), data, strlen(data));
+    frame->len += strlen(data);
 }
 
 static inline void anotc_add_checksum(struct anotc_frame *frame)

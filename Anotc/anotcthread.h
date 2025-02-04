@@ -2,9 +2,18 @@
 #define ANOTCTHREAD_H
 
 #include <QThread>
+#include <QList>
+#include <QTimer>
+#include <QMutex>
 #include "Anotc/anotc.h"
 #include "Anotc/anotc_data_frame.h"
 #include "Anotc/anotc_config_frame.h"
+
+struct anotc_timeout {
+    unsigned int try_count;
+    struct anotc_frame *frame;
+    int (*check_func)(struct anotc_frame *send_frame, struct anotc_frame *recv_frame);
+};
 
 class AnotcThread : public QThread
 {
@@ -12,6 +21,8 @@ class AnotcThread : public QThread
 
 public:
     explicit AnotcThread(QObject *parent = nullptr);
+    ~AnotcThread();
+
     void run();
     void setSendDelegate(void (*send)(const QByteArray &data));
 
@@ -25,6 +36,14 @@ signals:
     void onFlightDataComing(struct anotc_parsed_data_frame);
     void onFlightParamComing(struct anotc_parsed_parameter_frame);
 
+private slots:
+    void checkTimeout();
+
+private:
+    static QList<struct anotc_timeout*> timeout_queue;
+    static QMutex mutex;
+
+    QTimer *timer;
 
 };
 

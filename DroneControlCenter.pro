@@ -12,6 +12,7 @@ SOURCES += \
     Anotc/anotc.cpp \
     Anotc/anotc_config_frame.cpp \
     Anotc/anotc_data_frame.cpp \
+    Anotc/anotc_receive_check.cpp \
     Anotc/anotcthread.cpp \
     Anotc/blockingqueue.cpp \
     DLog.cpp \
@@ -30,6 +31,7 @@ HEADERS += \
     Anotc/anotc.h \
     Anotc/anotc_config_frame.h \
     Anotc/anotc_data_frame.h \
+    Anotc/anotc_receive_check.h \
     Anotc/anotcthread.h \
     Anotc/blockingqueue.h \
     DLog.h \

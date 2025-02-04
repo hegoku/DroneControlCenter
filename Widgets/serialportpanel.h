@@ -22,6 +22,7 @@ public:
     void refreshSerialPort();
     void setDataHandler(void (*handleData)(QByteArray *data));
     void sendData(const QByteArray &value);
+    bool isSerialPortOpen();
 
 signals:
     void onConnect();
@@ -43,6 +44,8 @@ private:
 
     SerialPortWorker *worker;
     QThread *serialThread;
+
+    bool is_serial_port_open;
 };
 
 #endif // SERIALPORTPANEL_H

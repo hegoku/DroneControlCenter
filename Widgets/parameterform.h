@@ -5,6 +5,7 @@
 #include "Anotc/anotc_config_frame.h"
 #include <QMap>
 #include <QStandardItemModel>
+#include "Anotc/anotc.h"
 
 struct anotc_parameter_defination
 {
@@ -29,6 +30,10 @@ public:
 public slots:
     void readParameter();
     void updateData(struct anotc_parsed_parameter_frame);
+    void itemChanged(QStandardItem *item);
+    void sendParameter();
+    void saveParameter();
+    void receiveCheckFrame(struct anotc_blocking_queue_item);
 
 private:
     Ui::ParameterForm *ui;
@@ -38,7 +43,10 @@ private:
     QStandardItemModel *model;
     QMap<unsigned char, QString> par_type_map;
 
+    QMap<unsigned short, unsigned char> changed_par;
+
     void insertParam(struct anotc_parameter_defination*);
+    void formatAndSendParam(unsigned short row);
 };
 
 #endif // PARAMETERFORM_H

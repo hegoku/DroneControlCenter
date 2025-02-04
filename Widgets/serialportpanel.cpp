@@ -12,6 +12,8 @@ SerialPortPanel::SerialPortPanel(QWidget *parent)
     connect(ui->serialPortConnectButton, SIGNAL(clicked()), this, SLOT(ClickButton_connect_serial_port()));
     connect(ui->refreshSerialPortButton, SIGNAL(clicked()), this, SLOT(ClickButton_refresh_serial_port()));
 
+    is_serial_port_open = false;
+
     refreshSerialPort();
 
     // serialThread = new QThread();
@@ -94,6 +96,7 @@ void SerialPortPanel::ClickButton_connect_serial_port()
                         ui->ParitySelection->setEnabled(false);
                         ui->StopBitSelection->setEnabled(false);
                         ui->serialPortConnectButton->setText("Disconnect");
+                        is_serial_port_open = true;
                         emit onConnect();
                     }, Qt::QueuedConnection);
                 }
@@ -137,6 +140,7 @@ void SerialPortPanel::onSerialClosed()
     ui->ParitySelection->setEnabled(true);
     ui->StopBitSelection->setEnabled(true);
     ui->serialPortConnectButton->setText("Connect");
+    is_serial_port_open = false;
 }
 
 void SerialPortPanel::sendData(const QByteArray &value)
@@ -145,4 +149,9 @@ void SerialPortPanel::sendData(const QByteArray &value)
     // QMetaObject::invokeMethod(worker, [=]{
     worker->sendData(value);
     // }, Qt::DirectConnection);
+}
+
+bool SerialPortPanel::isSerialPortOpen()
+{
+    return is_serial_port_open;
 }

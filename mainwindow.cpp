@@ -32,7 +32,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(timer, SIGNAL(timeout()), this, SLOT(anotcTimerHanlder()));
 
     anotc_thread = new AnotcThread();
+    anotc_thread->setSendDelegate(MainWindow::sendData);
     connect(anotc_thread, &AnotcThread::onFrameComing, this, &MainWindow::showLog);
+    connect(anotc_thread, &AnotcThread::onFrameComing, ui->parameter_viewer, &ParameterForm::receiveCheckFrame);
     connect(anotc_thread, &AnotcThread::onFlightDataComing, ui->dataTable, &DataTable::updateData);
     connect(anotc_thread, &AnotcThread::onFlightDataComing, ui->drone_3d_model, &DroneModel::onAttitudeUpdate);
     connect(anotc_thread, &AnotcThread::onFlightParamComing, ui->parameter_viewer, &ParameterForm::updateData);
@@ -53,7 +55,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::onSerialPortConnect()
 {
-    anotc_thread->setSendDelegate(MainWindow::sendData);
     ui->UDPTab->setEnabled(false);
     timer->start();
 }
@@ -94,15 +95,18 @@ void MainWindow::showLog(struct anotc_blocking_queue_item item)
 
 void MainWindow::sendData(const QByteArray &data)
 {
-    if (MainWindow::instance->ui->SerialPortTab->isEnabled()) {
+    if (MainWindow::instance->ui->serialPortWidget->isSerialPortOpen()) {
         MainWindow::instance->ui->serialPortWidget->sendData(data);
-    } else {
-
+    } else if (MainWindow::instance->ui->UDPWidget->isOpen()) {
+        MainWindow::instance->ui->UDPWidget->sendData(data);
     }
 }
 
 void MainWindow::printLog(QString content)
 {
+    QTextCursor cursor = MainWindow::instance->ui->logView->textCursor();
+    cursor.movePosition(QTextCursor::End);
+    MainWindow::instance->ui->logView->setTextCursor(cursor);
     MainWindow::instance->ui->logView->insertHtml(content);
     QScrollBar *scrollbar = MainWindow::instance->ui->logView->verticalScrollBar();
     if (scrollbar) {

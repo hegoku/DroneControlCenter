@@ -52,7 +52,6 @@ void UDPPanel::handleUDPData()
         QByteArray data;
         data.resize(udpSocket->pendingDatagramSize());
         udpSocket->readDatagram(data.data(), data.size(), &hostAddress, &hostPort);
-        qDebug("1");
         handleData(&data);
     }
 }
@@ -60,4 +59,16 @@ void UDPPanel::handleUDPData()
 void UDPPanel::udp_error_handler(QAbstractSocket::SocketError)
 {
 
+}
+
+bool UDPPanel::isOpen()
+{
+    return udpSocket->isOpen();
+}
+
+void UDPPanel::sendData(const QByteArray &data)
+{
+    if (udpSocket->isOpen()) {
+        udpSocket->write(data);
+    }
 }
