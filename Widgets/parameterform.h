@@ -32,8 +32,9 @@ public slots:
     void updateData(struct anotc_parsed_parameter_frame);
     void itemChanged(QStandardItem *item);
     void sendParameter();
-    void saveParameter();
     void receiveCheckFrame(struct anotc_blocking_queue_item);
+    void onConnect();
+    void onDisconnect();
 
 private:
     Ui::ParameterForm *ui;

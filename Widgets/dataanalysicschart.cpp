@@ -1,6 +1,10 @@
 #include "dataanalysicschart.h"
 
-DataAnalysicsChart::DataAnalysicsChart() {
+DataAnalysicsChart::DataAnalysicsChart(QWidget *parent)
+    : QChartView(parent) {
+
+    setRubberBand(QChartView::RectangleRubberBand);
+
     chart = new QChart();
     chart->legend()->hide();
     setChart(chart);

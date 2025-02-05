@@ -24,8 +24,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->serialPortWidget, SIGNAL(onConnect()), this, SLOT(onSerialPortConnect()));
     connect(ui->serialPortWidget, SIGNAL(onDisconnect()), this, SLOT(onSerialPortDisconnect()));
+    connect(ui->serialPortWidget, &SerialPortPanel::onConnect, ui->parameter_viewer, &ParameterForm::onConnect);
+    connect(ui->serialPortWidget, &SerialPortPanel::onDisconnect, ui->parameter_viewer, &ParameterForm::onDisconnect);
     connect(ui->UDPWidget, SIGNAL(onConnect()), this, SLOT(onUDPConnect()));
     connect(ui->UDPWidget, SIGNAL(onDisconnect()), this, SLOT(onUDPDisconnect()));
+    connect(ui->UDPWidget, &UDPPanel::onConnect, ui->parameter_viewer, &ParameterForm::onConnect);
+    connect(ui->UDPWidget, &UDPPanel::onDisconnect, ui->parameter_viewer, &ParameterForm::onDisconnect);
 
     timer = new QTimer();
     timer->setInterval(100);

@@ -35,15 +35,17 @@ signals:
     void onFrameComing(struct anotc_blocking_queue_item);
     void onFlightDataComing(struct anotc_parsed_data_frame);
     void onFlightParamComing(struct anotc_parsed_parameter_frame);
+    void onTimerStop();
 
 private slots:
     void checkTimeout();
+    void stopTimer();
 
 private:
     static QList<struct anotc_timeout*> timeout_queue;
     static QMutex mutex;
-
-    QTimer *timer;
+    static QTimer *timer;
+    static void deleteTimeout(struct anotc_frame *frame);
 
 };
 

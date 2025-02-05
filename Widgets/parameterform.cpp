@@ -24,7 +24,6 @@ ParameterForm::ParameterForm(QWidget *parent)
 
     connect(ui->readBtn, &QPushButton::clicked, this, &ParameterForm::readParameter);
     connect(ui->sendBtn, &QPushButton::clicked, this, &ParameterForm::sendParameter);
-    connect(ui->saveBtn, &QPushButton::clicked, this, &ParameterForm::saveParameter);
 
     model = new QStandardItemModel();
     ui->tableView->setModel(model);
@@ -66,7 +65,7 @@ void ParameterForm::updateData(struct anotc_parsed_parameter_frame item)
         if (item.frame_value.value(0).value.uint8==ANOTC_CONFIG_FRAME_CMD_READ_COUNT) {
             param_count = item.frame_value.value(1).value.uint16;
             DLogI(QString("Parameter count:%1").arg(param_count));
-            DLogN(QString("Start to read parameters' info ..."));
+            DLogN(QString("Read parameters' info ..."));
             if (param_count>0) {
                 // QMetaObject::invokeMethod(this, [=]{
                     anotc_send_config_get_param_info(0);
@@ -87,7 +86,7 @@ void ParameterForm::updateData(struct anotc_parsed_parameter_frame item)
                 anotc_send_config_get_param_info(d->par_id+1);
             // }, Qt::QueuedConnection);
         } else {
-            DLogN(QString("Start to read parameters' value ..."));
+            DLogN(QString("Read parameters' value ..."));
             anotc_send_config_get_param_value(0);
         }
         changed_par.clear();
@@ -145,7 +144,7 @@ void ParameterForm::receiveCheckFrame(struct anotc_blocking_queue_item item)
             if (changed_par.isEmpty()==false) {
                 formatAndSendParam(changed_par.firstKey());
             } else {
-                DLogN(QString("Start to save parameters' value ..."));
+                DLogN(QString("Save parameters' value ..."));
                 anotc_send_config_save_param();
             }
         } else if (item.frame.frame.data[0]==ANOTC_FRAME_CONFIG_CMD) {
@@ -261,7 +260,18 @@ void ParameterForm::sendParameter()
     formatAndSendParam(changed_par.firstKey());
 }
 
-void ParameterForm::saveParameter()
+void ParameterForm::onConnect()
 {
-    anotc_send_config_save_param();
+    ui->readBtn->setEnabled(true);
+    ui->sendBtn->setEnabled(true);
+    changed_par.clear();
+    anotc_parameter_defination_list.clear();
+    model->removeRows(0, model->rowCount());
+
+}
+
+void ParameterForm::onDisconnect()
+{
+    ui->readBtn->setEnabled(false);
+    ui->sendBtn->setEnabled(false);
 }

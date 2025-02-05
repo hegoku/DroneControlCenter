@@ -48,3 +48,13 @@ int check_recv_param_info(struct anotc_frame *send_frame, struct anotc_frame *re
     }
     return -1;
 }
+
+int check_recv_param_set_value(struct anotc_frame *send_frame, struct anotc_frame *recv_frame)
+{
+    if (send_frame->fun==ANOTC_FRAME_CONFIG_READ_WRITE) {
+        if (recv_frame->fun==ANOTC_FRAME_FRAME_CHECK && send_frame->fun==recv_frame->data[0]) {
+            return 0;
+        }
+    }
+    return -1;
+}

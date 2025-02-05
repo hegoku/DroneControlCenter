@@ -6,20 +6,28 @@
 #include "DLog.h"
 
 AnotcThread *AnotcThread::instance = 0;
+QTimer *AnotcThread::timer = new QTimer();
+
 
 AnotcThread::AnotcThread(QObject *parent)
     : QThread{parent}
 {
     AnotcThread::instance = this;
     anotc_send_func = AnotcThread::anotc_send;
-    timer = new QTimer();
+    // timer = new QTimer();
     timer->setInterval(2000);
     timer->setSingleShot(true);
+    connect(this, &AnotcThread::onTimerStop, this, &AnotcThread::stopTimer);
     connect(timer, &QTimer::timeout, this, &AnotcThread::checkTimeout);
-    timer->start();
+    // timer->start();
 }
 
 AnotcThread::~AnotcThread()
+{
+    timer->stop();
+}
+
+void AnotcThread::stopTimer()
 {
     timer->stop();
 }
@@ -43,18 +51,14 @@ void AnotcThread::run()
             parsed_param_frame.func = item.frame.frame.fun;
             parsed_param_frame.frame_value.clear();
             if (anotc_parse_config_frame(&item.frame, &parsed_param_frame.frame_value)==0) {
-                AnotcThread::mutex.lock();
-                for (int i=0;i<AnotcThread::timeout_queue.count();i++) {
-                    if (AnotcThread::timeout_queue.at(i)->check_func(AnotcThread::timeout_queue.at(i)->frame, &item.frame.frame)==0) {
-                        free(AnotcThread::timeout_queue.at(i)->frame);
-                        free(AnotcThread::timeout_queue.at(i));
-                        AnotcThread::timeout_queue.removeAt(i);
-                        break;
-                    }
-                }
-                AnotcThread::mutex.unlock();
+                deleteTimeout(&item.frame.frame);
                 emit onFlightParamComing(parsed_param_frame);
             }
+        } else if (item.frame.frame.fun==ANOTC_FRAME_FRAME_CHECK) {
+            if (item.frame.frame.data[0]>=ANOTC_FRAME_CONFIG_CMD && item.frame.frame.data[0]<=ANOTC_FRAME_DEVICE_INFO) {
+                deleteTimeout(&item.frame.frame);
+            }
+            emit onFrameComing(item);
         } else {
             emit onFrameComing(item);
         }
@@ -108,6 +112,20 @@ void AnotcThread::anotc_send(unsigned char *data, int len)
             timeout->check_func = check_recv_param_info;
             timeout_queue.append(timeout);
         }
+        if (!timer->isActive()) {
+            timer->start();
+        }
+    } else if (frame->fun==ANOTC_FRAME_CONFIG_READ_WRITE) {
+        send_frame = (struct anotc_frame*)malloc(sizeof(struct anotc_frame));
+        memcpy(send_frame, frame, sizeof(struct anotc_frame));
+        timeout = (struct anotc_timeout*)malloc(sizeof(struct anotc_timeout));
+        timeout->try_count = 5;
+        timeout->frame = send_frame;
+        timeout->check_func = check_recv_param_set_value;
+        timeout_queue.append(timeout);
+        if (!timer->isActive()) {
+            timer->start();
+        }
     }
     AnotcThread::mutex.unlock();
     QByteArray data_to_send = QByteArray::fromRawData((char*)data, len);
@@ -140,6 +158,27 @@ void AnotcThread::checkTimeout()
         DLogW(QString("f%1 try count:%2").arg(AnotcThread::timeout_queue.at(i)->frame->fun).arg(AnotcThread::timeout_queue.at(i)->try_count));
         AnotcThread::timeout_queue.at(i)->try_count--;
     }
+
+    if (AnotcThread::timeout_queue.count()>0) {
+        timer->start();
+    }
     AnotcThread::mutex.unlock();
-    timer->start();
+}
+
+void AnotcThread::deleteTimeout(struct anotc_frame *frame)
+{
+    AnotcThread::mutex.lock();
+    for (int i=0;i<AnotcThread::timeout_queue.count();i++) {
+        if (AnotcThread::timeout_queue.at(i)->check_func(AnotcThread::timeout_queue.at(i)->frame, frame)==0) {
+            free(AnotcThread::timeout_queue.at(i)->frame);
+            free(AnotcThread::timeout_queue.at(i));
+            AnotcThread::timeout_queue.removeAt(i);
+            break;
+        }
+    }
+    if (AnotcThread::timeout_queue.count()==0) {
+        emit AnotcThread::instance->onTimerStop();
+        // timer->stop();
+    }
+    AnotcThread::mutex.unlock();
 }

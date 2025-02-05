@@ -92,7 +92,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -139,6 +139,21 @@
       </property>
      </widget>
     </widget>
+    <widget class="QWidget" name="tab_4">
+     <attribute name="title">
+      <string>Data Chart</string>
+     </attribute>
+     <widget class="DataChartForm" name="widget" native="true">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>801</width>
+        <height>521</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -147,7 +162,7 @@
      <x>0</x>
      <y>0</y>
      <width>1056</width>
-     <height>37</height>
+     <height>24</height>
     </rect>
    </property>
   </widget>
@@ -182,6 +197,12 @@
    <class>ParameterForm</class>
    <extends>QWidget</extends>
    <header>Widgets/parameterform.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>DataChartForm</class>
+   <extends>QWidget</extends>
+   <header>Widgets/datachartform.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
