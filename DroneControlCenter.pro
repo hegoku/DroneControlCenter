@@ -11,6 +11,7 @@ CONFIG += c++17
 SOURCES += \
     Anotc/anotc.cpp \
     Anotc/anotc_config_frame.cpp \
+    Anotc/anotc_custom_frame.cpp \
     Anotc/anotc_data_frame.cpp \
     Anotc/anotc_receive_check.cpp \
     Anotc/anotcthread.cpp \
@@ -19,6 +20,7 @@ SOURCES += \
     Widgets/dataanalysicschart.cpp \
     Widgets/datachartform.cpp \
     Widgets/datatable.cpp \
+    Widgets/mixerform.cpp \
     Widgets/parameterform.cpp \
     Widgets/serialportworker.cpp \
     Widgets/dronemodel.cpp \
@@ -30,6 +32,7 @@ SOURCES += \
 HEADERS += \
     Anotc/anotc.h \
     Anotc/anotc_config_frame.h \
+    Anotc/anotc_custom_frame.h \
     Anotc/anotc_data_frame.h \
     Anotc/anotc_receive_check.h \
     Anotc/anotcthread.h \
@@ -38,6 +41,7 @@ HEADERS += \
     Widgets/dataanalysicschart.h \
     Widgets/datachartform.h \
     Widgets/datatable.h \
+    Widgets/mixerform.h \
     Widgets/parameterform.h \
     Widgets/serialportworker.h \
     Widgets/dronemodel.h \
@@ -49,6 +53,7 @@ FORMS += \
     Widgets/datachartform.ui \
     Widgets/datatable.ui \
     Widgets/dronemodel.ui \
+    Widgets/mixerform.ui \
     Widgets/parameterform.ui \
     Widgets/serialportpanel.ui \
     Widgets/udppanel.ui \

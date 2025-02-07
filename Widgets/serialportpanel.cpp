@@ -103,6 +103,7 @@ void SerialPortPanel::ClickButton_connect_serial_port()
             }
         }, Qt::QueuedConnection);
     } else {
+        emit onBeforeDisconnect();
         ui->serialPortComboBox->setEnabled(true);
         ui->refreshSerialPortButton->setEnabled(true);
         ui->lineEditBaudRate->setEnabled(true);

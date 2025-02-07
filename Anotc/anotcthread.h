@@ -8,6 +8,7 @@
 #include "Anotc/anotc.h"
 #include "Anotc/anotc_data_frame.h"
 #include "Anotc/anotc_config_frame.h"
+#include "Anotc/anotc_receive_check.h"
 
 struct anotc_timeout {
     unsigned int try_count;
@@ -36,6 +37,7 @@ signals:
     void onFlightDataComing(struct anotc_parsed_data_frame);
     void onFlightParamComing(struct anotc_parsed_parameter_frame);
     void onTimerStop();
+    void onCheckFrameComing(struct anotc_parsed_check_frame);
 
 private slots:
     void checkTimeout();

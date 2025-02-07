@@ -37,6 +37,7 @@ void AnotcThread::run()
     struct anotc_blocking_queue_item item;
     struct anotc_parsed_data_frame parsed_data_frame;
     struct anotc_parsed_parameter_frame parsed_param_frame;
+    struct anotc_parsed_check_frame parsed_check_frame;
     for(;;) {
         item = anotc_queue.take();
         if (anotc_frame_defination_list.contains(item.frame.frame.fun)) {
@@ -55,10 +56,12 @@ void AnotcThread::run()
                 emit onFlightParamComing(parsed_param_frame);
             }
         } else if (item.frame.frame.fun==ANOTC_FRAME_FRAME_CHECK) {
+            parsed_check_frame.timestamp = item.timestamp;
+            anotc_parse_check_frame(&item.frame, &parsed_check_frame);
             if (item.frame.frame.data[0]>=ANOTC_FRAME_CONFIG_CMD && item.frame.frame.data[0]<=ANOTC_FRAME_DEVICE_INFO) {
                 deleteTimeout(&item.frame.frame);
             }
-            emit onFrameComing(item);
+            emit onCheckFrameComing(parsed_check_frame);
         } else {
             emit onFrameComing(item);
         }
@@ -80,13 +83,15 @@ void AnotcThread::anotc_send(unsigned char *data, int len)
     AnotcThread::mutex.lock();
     if (frame->fun==ANOTC_FRAME_CONFIG_CMD) {
         if (frame->data[0]==ANOTC_CONFIG_FRAME_CMD_DEVICE_INFO) {
-            send_frame = (struct anotc_frame*)malloc(sizeof(struct anotc_frame));
-            memcpy(send_frame, frame, sizeof(struct anotc_frame));
-            timeout = (struct anotc_timeout*)malloc(sizeof(struct anotc_timeout));
-            timeout->try_count = 5;
-            timeout->frame = send_frame;
-            timeout->check_func = check_recv_device_info;
-            timeout_queue.append(timeout);
+            if ((frame->data[1] | (((unsigned short)frame->data[2])<<8)) !=2) {
+                send_frame = (struct anotc_frame*)malloc(sizeof(struct anotc_frame));
+                memcpy(send_frame, frame, sizeof(struct anotc_frame));
+                timeout = (struct anotc_timeout*)malloc(sizeof(struct anotc_timeout));
+                timeout->try_count = 5;
+                timeout->frame = send_frame;
+                timeout->check_func = check_recv_device_info;
+                timeout_queue.append(timeout);
+            }
         } else if (frame->data[0]==ANOTC_CONFIG_FRAME_CMD_READ_COUNT) {
             send_frame = (struct anotc_frame*)malloc(sizeof(struct anotc_frame));
             memcpy(send_frame, frame, sizeof(struct anotc_frame));
@@ -112,7 +117,7 @@ void AnotcThread::anotc_send(unsigned char *data, int len)
             timeout->check_func = check_recv_param_info;
             timeout_queue.append(timeout);
         }
-        if (!timer->isActive()) {
+        if (timeout_queue.isEmpty()==false && !timer->isActive()) {
             timer->start();
         }
     } else if (frame->fun==ANOTC_FRAME_CONFIG_READ_WRITE) {

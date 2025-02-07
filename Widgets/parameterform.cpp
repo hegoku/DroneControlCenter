@@ -136,22 +136,22 @@ void ParameterForm::updateData(struct anotc_parsed_parameter_frame item)
     }
 }
 
-void ParameterForm::receiveCheckFrame(struct anotc_blocking_queue_item item)
+void ParameterForm::receiveCheckFrame(struct anotc_parsed_check_frame item)
 {
-    if (item.frame.frame.fun==ANOTC_FRAME_FRAME_CHECK) {
-        if (item.frame.frame.data[0]==ANOTC_FRAME_CONFIG_READ_WRITE) {
-            changed_par.remove(changed_par.firstKey());
-            if (changed_par.isEmpty()==false) {
-                formatAndSendParam(changed_par.firstKey());
-            } else {
-                DLogN(QString("Save parameters' value ..."));
-                anotc_send_config_save_param();
-            }
-        } else if (item.frame.frame.data[0]==ANOTC_FRAME_CONFIG_CMD) {
-            DLogN(QString("Save parameters' value done<br/>start to refresh parameters ..."));
-            anotc_send_config_get_count();
+    if (item.func==ANOTC_FRAME_CONFIG_READ_WRITE) {
+        if (item.code) {
+            DLogE(item.msg);
         }
-
+        changed_par.remove(changed_par.firstKey());
+        if (changed_par.isEmpty()==false) {
+            formatAndSendParam(changed_par.firstKey());
+        } else {
+            DLogN(QString("Save parameters' value ..."));
+            anotc_send_config_save_param();
+        }
+    } else if (item.func==ANOTC_FRAME_CONFIG_CMD) {
+        DLogN(QString("Save parameters' value done<br/>start to refresh parameters ..."));
+        anotc_send_config_get_count();
     }
 }
 
@@ -256,7 +256,7 @@ void ParameterForm::formatAndSendParam(unsigned short row)
 void ParameterForm::sendParameter()
 {
     if (changed_par.isEmpty()) return;
-    DLogN(QString("Start to send parameters' value ..."));
+    DLogN(QString("Send parameters' value ..."));
     formatAndSendParam(changed_par.firstKey());
 }
 

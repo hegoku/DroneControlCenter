@@ -26,6 +26,7 @@ public:
 
 signals:
     void onConnect();
+    void onBeforeDisconnect();
     void onDisconnect();
     void onSendData(const QByteArray &data);
     void onSetParams(QSerialPortInfo *port_info, int baud_rate, QSerialPort::DataBits data_bits, QSerialPort::StopBits stop_bit, QSerialPort::Parity parity);

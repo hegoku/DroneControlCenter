@@ -7,6 +7,7 @@
 #include <QMutex>
 #include "Anotc/anotc.h"
 #include "Anotc/anotcthread.h"
+#include "Anotc/anotc_config_frame.h"
 #include <QLabel>
 
 QT_BEGIN_NAMESPACE
@@ -30,6 +31,8 @@ private slots:
     void onUDPDisconnect();
     void anotcTimerHanlder();
     void showLog(struct anotc_blocking_queue_item);
+    void onBeforeDisconnect();
+    void getDeviceInfo(struct anotc_parsed_parameter_frame);
 
 private:
     Ui::MainWindow *ui;
@@ -38,6 +41,10 @@ private:
     AnotcThread *anotc_thread;
 
     QLabel *anotc_status_label;
+    QLabel *imu_status_label;
+    QLabel *compass_status_label;
+    QLabel *baro_status_label;
+    QLabel *cpu_load_label;
 
     static void sendData(const QByteArray &data);
     static void printLog(QString content);

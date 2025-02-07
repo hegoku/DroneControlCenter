@@ -6,6 +6,7 @@
 #include <QScrollBar>
 #include <QDateTime>
 #include "DLog.h"
+#include "Anotc/anotc_custom_frame.h"
 
 MainWindow* MainWindow::instance = 0;
 
@@ -18,12 +19,29 @@ MainWindow::MainWindow(QWidget *parent)
 
     DLog_print = MainWindow::printLog;
 
+    cpu_load_label = new QLabel(this);
+    cpu_load_label->setText("CPU: 0.00%");
+    ui->statusbar->addWidget(cpu_load_label);
+
+    imu_status_label = new QLabel(this);
+    imu_status_label->setText("IMU:OFF");
+    ui->statusbar->addWidget(imu_status_label);
+
+    compass_status_label = new QLabel(this);
+    compass_status_label->setText("COMPASS:OFF");
+    ui->statusbar->addWidget(compass_status_label);
+
+    baro_status_label = new QLabel(this);
+    baro_status_label->setText("BARO:OFF");
+    ui->statusbar->addWidget(baro_status_label);
+
     anotc_status_label = new QLabel(this);
     anotc_status_label->setText("Received:0 Error:0 Exceed length:0");
     ui->statusbar->addPermanentWidget(anotc_status_label);
 
     connect(ui->serialPortWidget, SIGNAL(onConnect()), this, SLOT(onSerialPortConnect()));
     connect(ui->serialPortWidget, SIGNAL(onDisconnect()), this, SLOT(onSerialPortDisconnect()));
+    connect(ui->serialPortWidget, &SerialPortPanel::onBeforeDisconnect, this, &MainWindow::onBeforeDisconnect);
     connect(ui->serialPortWidget, &SerialPortPanel::onConnect, ui->parameter_viewer, &ParameterForm::onConnect);
     connect(ui->serialPortWidget, &SerialPortPanel::onDisconnect, ui->parameter_viewer, &ParameterForm::onDisconnect);
     connect(ui->UDPWidget, SIGNAL(onConnect()), this, SLOT(onUDPConnect()));
@@ -38,10 +56,11 @@ MainWindow::MainWindow(QWidget *parent)
     anotc_thread = new AnotcThread();
     anotc_thread->setSendDelegate(MainWindow::sendData);
     connect(anotc_thread, &AnotcThread::onFrameComing, this, &MainWindow::showLog);
-    connect(anotc_thread, &AnotcThread::onFrameComing, ui->parameter_viewer, &ParameterForm::receiveCheckFrame);
+    connect(anotc_thread, &AnotcThread::onCheckFrameComing, ui->parameter_viewer, &ParameterForm::receiveCheckFrame);
     connect(anotc_thread, &AnotcThread::onFlightDataComing, ui->dataTable, &DataTable::updateData);
     connect(anotc_thread, &AnotcThread::onFlightDataComing, ui->drone_3d_model, &DroneModel::onAttitudeUpdate);
     connect(anotc_thread, &AnotcThread::onFlightParamComing, ui->parameter_viewer, &ParameterForm::updateData);
+    connect(anotc_thread, &AnotcThread::onFlightParamComing, this, &MainWindow::getDeviceInfo);
 
     ui->serialPortWidget->setDataHandler(anotc_parse_data);
     ui->UDPWidget->handleData = anotc_parse_data;
@@ -60,6 +79,7 @@ MainWindow::~MainWindow()
 void MainWindow::onSerialPortConnect()
 {
     ui->UDPTab->setEnabled(false);
+    anotc_send_custom_connect();
     timer->start();
 }
 
@@ -68,11 +88,15 @@ void MainWindow::onSerialPortDisconnect()
     timer->stop();
     anotc_reset();
     ui->UDPTab->setEnabled(true);
+    imu_status_label->setText("IMU:OFF");
+    compass_status_label->setText("COMPASS:OFF");
+    baro_status_label->setText("BARO:OFF");
 }
 
 void MainWindow::onUDPConnect()
 {
     ui->SerialPortTab->setEnabled(false);
+    anotc_send_custom_connect();
     timer->start();
 }
 
@@ -81,6 +105,14 @@ void MainWindow::onUDPDisconnect()
     timer->stop();
     anotc_reset();
     ui->SerialPortTab->setEnabled(true);
+    imu_status_label->setText("IMU:OFF");
+    compass_status_label->setText("COMPASS:OFF");
+    baro_status_label->setText("BARO:OFF");
+}
+
+void MainWindow::onBeforeDisconnect()
+{
+    anotc_send_custom_disconnect();
 }
 
 void MainWindow::anotcTimerHanlder()
@@ -115,5 +147,22 @@ void MainWindow::printLog(QString content)
     QScrollBar *scrollbar = MainWindow::instance->ui->logView->verticalScrollBar();
     if (scrollbar) {
         scrollbar->setSliderPosition(scrollbar->maximum());
+    }
+}
+
+void MainWindow::getDeviceInfo(struct anotc_parsed_parameter_frame item)
+{
+    if (item.func==ANOTC_FRAME_DEVICE_INFO) {
+        if (item.frame_value.at(0).value.uint8 & 0x1) {
+            imu_status_label->setText("IMU:ON");
+        }
+        if (item.frame_value.at(0).value.uint8 & 0x2) {
+            compass_status_label->setText("COMPASS:ON");
+        }
+        if (item.frame_value.at(0).value.uint8 & 0x4) {
+            baro_status_label->setText("BARO:ON");
+        }
+    } else if (item.func==ANOTC_FRAME_CUSTOM_SYSTEM_INFO) {
+
     }
 }

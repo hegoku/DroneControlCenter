@@ -139,6 +139,21 @@
       </property>
      </widget>
     </widget>
+    <widget class="QWidget" name="tab_5">
+     <attribute name="title">
+      <string>Mixer</string>
+     </attribute>
+     <widget class="MixerForm" name="widget_2" native="true">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>801</width>
+        <height>521</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
     <widget class="QWidget" name="tab_4">
      <attribute name="title">
       <string>Data Chart</string>
@@ -203,6 +218,12 @@
    <class>DataChartForm</class>
    <extends>QWidget</extends>
    <header>Widgets/datachartform.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MixerForm</class>
+   <extends>QWidget</extends>
+   <header>Widgets/mixerform.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

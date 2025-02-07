@@ -22,6 +22,8 @@
 #define ANOTC_FRAME_TARGET_ATTITUDE 0xA
 #define ANOTC_FRAME_BATTERY 0xD
 
+#define ANOTC_FRAME_PWM 0x20
+
 #define ANOTC_FRAME_GPS 0x30
 
 #define ANOTC_FRAME_RC 0x40
@@ -33,6 +35,9 @@
 
 #define ANOTC_FRAME_LOG_STRING 0xA0
 #define ANOTC_FRAME_LOG_STRING_NUM 0xA1
+
+#define ANOTC_FRAME_CUSTOM_SYSTEM_INFO 0xF0
+#define ANOTC_FRAME_CUSTOM_MIXER_INFO 0xF3
 
 struct anotc_frame {
     unsigned char head;

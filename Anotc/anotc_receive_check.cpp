@@ -58,3 +58,12 @@ int check_recv_param_set_value(struct anotc_frame *send_frame, struct anotc_fram
     }
     return -1;
 }
+
+int anotc_parse_check_frame(union _un_anotc_v8_frame *frame, struct anotc_parsed_check_frame *frame_value)
+{
+    frame_value->func = frame->frame.data[0];
+    frame_value->code = frame->frame.data[3];
+    if (frame_value->code) {
+        frame_value->msg = QString::fromLocal8Bit((char*)(frame->frame.data+4), frame->frame.len-4);
+    }
+}

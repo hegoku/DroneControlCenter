@@ -62,5 +62,6 @@ void SerialPortWorker::sendData(const QByteArray &data)
 {
     if (SerialPort->isOpen()) {
         SerialPort->write(data);
+        SerialPort->flush();
     }
 }

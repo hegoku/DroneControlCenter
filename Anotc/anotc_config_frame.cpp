@@ -181,7 +181,7 @@ int anotc_parse_config_frame(union _un_anotc_v8_frame *frame, QList<struct anotc
     case ANOTC_FRAME_DEVICE_INFO:{
         value.value.uint8 = frame->frame.data[0];
         value.type = 0;
-        value.name = QString("DEV_ID");
+        value.name = QString("SENSOR_STATUS");
         value.string.clear();
         frame_value->append(value);
 

@@ -6,6 +6,7 @@
 #include <QMap>
 #include <QStandardItemModel>
 #include "Anotc/anotc.h"
+#include "Anotc/anotc_receive_check.h"
 
 struct anotc_parameter_defination
 {
@@ -32,7 +33,7 @@ public slots:
     void updateData(struct anotc_parsed_parameter_frame);
     void itemChanged(QStandardItem *item);
     void sendParameter();
-    void receiveCheckFrame(struct anotc_blocking_queue_item);
+    void receiveCheckFrame(struct anotc_parsed_check_frame);
     void onConnect();
     void onDisconnect();
 
