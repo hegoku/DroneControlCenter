@@ -22,6 +22,7 @@ public:
 
 signals:
     void onConnect();
+    void onBeforeDisconnect();
     void onDisconnect();
 
 private slots:

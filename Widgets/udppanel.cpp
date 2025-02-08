@@ -31,11 +31,13 @@ void UDPPanel::connectUDP()
             QMessageBox::information(this, "Info", "Failed to connect to broadcast", QMessageBox::NoButton, QMessageBox::Close);
             return;
         }
+        udpSocket->connectToHost(QHostAddress(ui->ipEdit->text()), port, QIODevice::WriteOnly);
         ui->ipEdit->setEnabled(false);
         ui->portEdit->setEnabled(false);
         ui->ConnectBtn->setText("Disconnect");
         emit onConnect();
     } else {
+        emit onBeforeDisconnect();
         udpSocket->close();
         ui->ipEdit->setEnabled(true);
         ui->portEdit->setEnabled(true);

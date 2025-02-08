@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
     DLog_print = MainWindow::printLog;
 
     cpu_load_label = new QLabel(this);
-    cpu_load_label->setText("CPU: 0.00%");
+    cpu_load_label->setText("CPU: 0%");
     ui->statusbar->addWidget(cpu_load_label);
 
     imu_status_label = new QLabel(this);
@@ -46,6 +46,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->serialPortWidget, &SerialPortPanel::onDisconnect, ui->parameter_viewer, &ParameterForm::onDisconnect);
     connect(ui->UDPWidget, SIGNAL(onConnect()), this, SLOT(onUDPConnect()));
     connect(ui->UDPWidget, SIGNAL(onDisconnect()), this, SLOT(onUDPDisconnect()));
+    connect(ui->UDPWidget, &UDPPanel::onBeforeDisconnect, this, &MainWindow::onBeforeDisconnect);
     connect(ui->UDPWidget, &UDPPanel::onConnect, ui->parameter_viewer, &ParameterForm::onConnect);
     connect(ui->UDPWidget, &UDPPanel::onDisconnect, ui->parameter_viewer, &ParameterForm::onDisconnect);
 
