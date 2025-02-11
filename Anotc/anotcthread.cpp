@@ -62,6 +62,8 @@ void AnotcThread::run()
                 deleteTimeout(&item.frame.frame);
             }
             emit onCheckFrameComing(parsed_check_frame);
+        } else if (item.frame.frame.fun==ANOTC_FRAME_CMD_SEND) {
+            emit onCMDResponseComing(item);
         } else {
             emit onFrameComing(item);
         }

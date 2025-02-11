@@ -92,7 +92,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>5</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -169,6 +169,21 @@
       </property>
      </widget>
     </widget>
+    <widget class="QWidget" name="tab_6">
+     <attribute name="title">
+      <string>Calibration</string>
+     </attribute>
+     <widget class="CalibrationForm" name="calibration_form" native="true">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>801</width>
+        <height>561</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -214,6 +229,12 @@
    <class>MixerForm</class>
    <extends>QWidget</extends>
    <header>Widgets/mixerform.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>CalibrationForm</class>
+   <extends>QWidget</extends>
+   <header>Widgets/calibrationform.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

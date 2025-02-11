@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QUdpSocket>
+#include "udpthread.h"
 
 namespace Ui {
 class UDPPanel;
@@ -20,6 +21,9 @@ public:
     bool isOpen();
     void sendData(const QByteArray &data);
 
+public slots:
+    void beforeDisconnect();
+
 signals:
     void onConnect();
     void onBeforeDisconnect();
@@ -33,6 +37,9 @@ private slots:
 private:
     Ui::UDPPanel *ui;
     QUdpSocket *udpSocket;
+    int is_bind;
+
+    UDPThread *udp_thread;
 };
 
 #endif // UDPPANEL_H

@@ -8,15 +8,26 @@ UDPPanel::UDPPanel(QWidget *parent)
     , ui(new Ui::UDPPanel)
 {
     ui->setupUi(this);
+    is_bind = 0;
     udpSocket = new QUdpSocket(this);
-    connect(udpSocket, &QUdpSocket::readyRead, this, &UDPPanel::handleUDPData);
+    connect(udpSocket, &QUdpSocket::readyRead, this, &UDPPanel::handleUDPData, Qt::QueuedConnection);
     connect(udpSocket, SIGNAL(errorOccurred(QAbstractSocket::SocketError)), this, SLOT(udp_error_handler(QAbstractSocket::SocketError)));
     connect(ui->ConnectBtn, SIGNAL(clicked()), this, SLOT(connectUDP()));
+
+    udp_thread = new UDPThread();
+    connect(udp_thread, &UDPThread::onBeforeDisconnect, this, &UDPPanel::beforeDisconnect);
+    // udp_thread->start();
 }
 
 UDPPanel::~UDPPanel()
 {
+    // udp_thread->quit();
     delete ui;
+}
+
+void UDPPanel::beforeDisconnect()
+{
+    emit onBeforeDisconnect();
 }
 
 void UDPPanel::connectUDP()
@@ -27,18 +38,25 @@ void UDPPanel::connectUDP()
         return;
     }
     if (ui->ConnectBtn->text().compare("Connect")==0) {
-        if (!udpSocket->bind(QHostAddress::Any, port, QUdpSocket::ShareAddress)) {
+        if (udp_thread->open(ui->ipEdit->text(), ui->portEdit->text().toInt())!=0) {
             QMessageBox::information(this, "Info", "Failed to connect to broadcast", QMessageBox::NoButton, QMessageBox::Close);
             return;
         }
-        udpSocket->connectToHost(QHostAddress(ui->ipEdit->text()), port, QIODevice::WriteOnly);
+        // if (!udpSocket->bind(QHostAddress::Any, port, QUdpSocket::ShareAddress)) {
+        //     QMessageBox::information(this, "Info", "Failed to connect to broadcast", QMessageBox::NoButton, QMessageBox::Close);
+        //     return;
+        // }
+        is_bind = 1;
+        // udpSocket->connectToHost(QHostAddress(ui->ipEdit->text()), port, QIODevice::ReadWrite);
         ui->ipEdit->setEnabled(false);
         ui->portEdit->setEnabled(false);
         ui->ConnectBtn->setText("Disconnect");
         emit onConnect();
     } else {
-        emit onBeforeDisconnect();
-        udpSocket->close();
+        // emit onBeforeDisconnect();
+        udp_thread->closeConnect();
+        // udpSocket->close();
+        is_bind = 0;
         ui->ipEdit->setEnabled(true);
         ui->portEdit->setEnabled(true);
         ui->ConnectBtn->setText("Connect");
@@ -65,12 +83,17 @@ void UDPPanel::udp_error_handler(QAbstractSocket::SocketError)
 
 bool UDPPanel::isOpen()
 {
-    return udpSocket->isOpen();
+    return udp_thread->isOpen();
+    // return is_bind==1;
+    // return udpSocket->isOpen();
 }
 
 void UDPPanel::sendData(const QByteArray &data)
 {
-    if (udpSocket->isOpen()) {
-        udpSocket->write(data);
-    }
+    // if (udpSocket->isOpen()) {
+    // if (is_bind==1) {
+        // udpSocket->writeDatagram(data, QHostAddress(ui->ipEdit->text()), ui->portEdit->text().toInt());
+        // udpSocket->write(data);
+    // }
+    udp_thread->sendData(data);
 }

@@ -58,10 +58,17 @@ MainWindow::MainWindow(QWidget *parent)
     anotc_thread->setSendDelegate(MainWindow::sendData);
     connect(anotc_thread, &AnotcThread::onFrameComing, this, &MainWindow::showLog);
     connect(anotc_thread, &AnotcThread::onCheckFrameComing, ui->parameter_viewer, &ParameterForm::receiveCheckFrame);
+    connect(anotc_thread, &AnotcThread::onCheckFrameComing, ui->calibration_form, &CalibrationForm::receiveCheckFrame);
+
     connect(anotc_thread, &AnotcThread::onFlightDataComing, ui->dataTable, &DataTable::updateData);
     connect(anotc_thread, &AnotcThread::onFlightDataComing, ui->drone_3d_model, &DroneModel::onAttitudeUpdate);
+    connect(anotc_thread, &AnotcThread::onFlightDataComing, this, &MainWindow::flightData);
+    connect(anotc_thread, &AnotcThread::onFlightDataComing, ui->calibration_form, &CalibrationForm::updateData);
+
     connect(anotc_thread, &AnotcThread::onFlightParamComing, ui->parameter_viewer, &ParameterForm::updateData);
     connect(anotc_thread, &AnotcThread::onFlightParamComing, this, &MainWindow::getDeviceInfo);
+
+    connect(anotc_thread, &AnotcThread::onCMDResponseComing, ui->calibration_form, &CalibrationForm::cmdResponse);
 
     ui->serialPortWidget->setDataHandler(anotc_parse_data);
     ui->UDPWidget->handleData = anotc_parse_data;
@@ -163,7 +170,12 @@ void MainWindow::getDeviceInfo(struct anotc_parsed_parameter_frame item)
         if (item.frame_value.at(0).value.uint8 & 0x4) {
             baro_status_label->setText("BARO:ON");
         }
-    } else if (item.func==ANOTC_FRAME_CUSTOM_SYSTEM_INFO) {
+    }
+}
 
+void MainWindow::flightData(struct anotc_parsed_data_frame item)
+{
+    if (item.func==ANOTC_FRAME_CUSTOM_SYSTEM_INFO) {
+        cpu_load_label->setText(QString("CPU:%1%").arg(item.frame_value.at(1).value.uint8));
     }
 }

@@ -126,5 +126,32 @@
                 "desc":""
             }
         ]
+    },
+    {
+        "id":241,
+        "name":"System Info",
+        "desc":"",
+        "params":[
+            {
+                "name":"Status",
+                "type":"UInt8",
+                "desc":""
+            },
+            {
+                "name":"CPU Load",
+                "type":"UInt8",
+                "desc":""
+            },
+            {
+                "name":"Voltage",
+                "type":"Float",
+                "desc":""
+            },
+            {
+                "name":"Current",
+                "type":"Float",
+                "desc":""
+            }
+        ]
     }
 ]

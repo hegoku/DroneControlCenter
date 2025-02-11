@@ -74,6 +74,7 @@ void loadDataFrameDefination(QString path)
         anotc_frame_defination_list.insert(de->func, de);
     }
 
+    anotc_frame_defination_list.value(ANOTC_FRAME_IMU)->formater = anotc_imu_formater;
     anotc_frame_defination_list.value(ANOTC_FRAME_EULER)->formater = anotc_euler_formater;
     anotc_frame_defination_list.value(ANOTC_FRAME_ALT)->formater = anotc_alt_formater;
 }
@@ -161,7 +162,6 @@ int anotc_parse_data_frame(union _un_anotc_v8_frame *frame, QList<struct anotc_v
         } else if (param->type.compare(QString::fromLocal8Bit("Float"))==0) {
             value.type = 8;
             uint32_t tmp = frame->frame.data[index++];
-            tmp = frame->frame.data[index++];
             if (index+1>frame->frame.len) break;
             tmp |= ((uint32_t)frame->frame.data[index++])<<8;
             if (index+1>frame->frame.len) break;
@@ -176,6 +176,16 @@ int anotc_parse_data_frame(union _un_anotc_v8_frame *frame, QList<struct anotc_v
         d->formater(frame_value);
     }
     return 0;
+}
+
+void anotc_imu_formater(QList<struct anotc_value> *frame_value)
+{
+    for (int i=0;i<frame_value->size();i++) {
+        if (frame_value->at(i).name.compare("GYRO_X")==0 || frame_value->at(i).name.compare("GYRO_Y")==0 || frame_value->at(i).name.compare("GYRO_Z")==0) {
+            (*frame_value)[i].type = 8;
+            (*frame_value)[i].value.f = ((float)frame_value->at(i).value.int16) / 100.0;
+        }
+    }
 }
 
 void anotc_euler_formater(QList<struct anotc_value> *frame_value)

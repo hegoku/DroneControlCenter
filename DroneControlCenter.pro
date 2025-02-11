@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     Anotc/anotc.cpp \
+    Anotc/anotc_cmd_frame.cpp \
     Anotc/anotc_config_frame.cpp \
     Anotc/anotc_custom_frame.cpp \
     Anotc/anotc_data_frame.cpp \
@@ -17,6 +18,7 @@ SOURCES += \
     Anotc/anotcthread.cpp \
     Anotc/blockingqueue.cpp \
     DLog.cpp \
+    Widgets/calibrationform.cpp \
     Widgets/dataanalysicschart.cpp \
     Widgets/datachartform.cpp \
     Widgets/datatable.cpp \
@@ -27,10 +29,12 @@ SOURCES += \
     Widgets/serialportpanel.cpp \
     Widgets/udppanel.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    udpthread.cpp
 
 HEADERS += \
     Anotc/anotc.h \
+    Anotc/anotc_cmd_frame.h \
     Anotc/anotc_config_frame.h \
     Anotc/anotc_custom_frame.h \
     Anotc/anotc_data_frame.h \
@@ -38,6 +42,7 @@ HEADERS += \
     Anotc/anotcthread.h \
     Anotc/blockingqueue.h \
     DLog.h \
+    Widgets/calibrationform.h \
     Widgets/dataanalysicschart.h \
     Widgets/datachartform.h \
     Widgets/datatable.h \
@@ -47,9 +52,11 @@ HEADERS += \
     Widgets/dronemodel.h \
     Widgets/serialportpanel.h \
     Widgets/udppanel.h \
-    mainwindow.h
+    mainwindow.h \
+    udpthread.h
 
 FORMS += \
+    Widgets/calibrationform.ui \
     Widgets/datachartform.ui \
     Widgets/datatable.ui \
     Widgets/dronemodel.ui \

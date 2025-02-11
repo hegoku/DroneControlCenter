@@ -38,6 +38,7 @@ signals:
     void onFlightParamComing(struct anotc_parsed_parameter_frame);
     void onTimerStop();
     void onCheckFrameComing(struct anotc_parsed_check_frame);
+    void onCMDResponseComing(struct anotc_blocking_queue_item);
 
 private slots:
     void checkTimeout();

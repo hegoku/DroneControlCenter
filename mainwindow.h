@@ -33,6 +33,7 @@ private slots:
     void showLog(struct anotc_blocking_queue_item);
     void onBeforeDisconnect();
     void getDeviceInfo(struct anotc_parsed_parameter_frame);
+    void flightData(struct anotc_parsed_data_frame item);
 
 private:
     Ui::MainWindow *ui;
