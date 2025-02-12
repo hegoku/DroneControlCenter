@@ -52,6 +52,7 @@ HEADERS += \
     Widgets/dronemodel.h \
     Widgets/serialportpanel.h \
     Widgets/udppanel.h \
+    flight.h \
     mainwindow.h \
     udpthread.h
 

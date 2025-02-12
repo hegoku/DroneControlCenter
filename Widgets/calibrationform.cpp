@@ -2,16 +2,7 @@
 #include "ui_calibrationform.h"
 #include "Anotc/anotc_cmd_frame.h"
 #include "DLog.h"
-
-enum flight_status {
-    FLIGHT_STATUS_READY,
-    FLIGHT_STATUS_ANGLE_RATE_MODE,
-    FLIGHT_STATUS_ANGLE_MODE,
-    FLIGHT_STATUS_CALIBRATION_ACCEL,
-    FLIGHT_STATUS_CALIBRATION_GYRO,
-    FLIGHT_STATUS_CALIBRATION_COMPASS,
-    FLIGHT_STATUS_MOTOR_TEST
-};
+#include "flight.h"
 
 CalibrationForm::CalibrationForm(QWidget *parent)
     : QWidget(parent)
@@ -20,6 +11,14 @@ CalibrationForm::CalibrationForm(QWidget *parent)
     ui->setupUi(this);
 
     connect(ui->gyro_btn, &QPushButton::clicked, this, &CalibrationForm::calibrate_gyro);
+
+    connect(ui->calibrate_accel, &QPushButton::clicked, this, &CalibrationForm::calibrate_accel);
+    connect(ui->calibrate_accel_up, &QPushButton::clicked, this, &CalibrationForm::calibrate_accel_up);
+    connect(ui->calibrate_accel_down, &QPushButton::clicked, this, &CalibrationForm::calibrate_accel_down);
+    connect(ui->calibrate_accel_forward, &QPushButton::clicked, this, &CalibrationForm::calibrate_accel_forward);
+    connect(ui->calibrate_accel_backward, &QPushButton::clicked, this, &CalibrationForm::calibrate_accel_backward);
+    connect(ui->calibrate_accel_left, &QPushButton::clicked, this, &CalibrationForm::calibrate_accel_left);
+    connect(ui->calibrate_accel_right, &QPushButton::clicked, this, &CalibrationForm::calibrate_accel_right);
 }
 
 CalibrationForm::~CalibrationForm()
@@ -49,10 +48,30 @@ void CalibrationForm::updateData(struct anotc_parsed_data_frame item)
         if (status == FLIGHT_STATUS_READY) {
             ui->gyro_btn->setText("Calibrate Gyro");
             ui->gyro_btn->setEnabled(true);
-        } else if (status & FLIGHT_STATUS_CALIBRATION_GYRO) {
-            ui->gyro_btn->setEnabled(false);
+            ui->calibrate_accel->setEnabled(true);
+            ui->calibrate_accel_up->setEnabled(false);
+            ui->calibrate_accel_down->setEnabled(false);
+            ui->calibrate_accel_forward->setEnabled(false);
+            ui->calibrate_accel_backward->setEnabled(false);
+            ui->calibrate_accel_left->setEnabled(false);
+            ui->calibrate_accel_right->setEnabled(false);
+        } else if (status == FLIGHT_STATUS_CALIBRATION_ACCEL) {
+            ui->calibrate_accel->setEnabled(false);
+            ui->calibrate_accel_up->setEnabled(true);
+            ui->calibrate_accel_down->setEnabled(true);
+            ui->calibrate_accel_forward->setEnabled(true);
+            ui->calibrate_accel_backward->setEnabled(true);
+            ui->calibrate_accel_left->setEnabled(true);
+            ui->calibrate_accel_right->setEnabled(true);
         } else {
             ui->gyro_btn->setEnabled(false);
+            ui->calibrate_accel->setEnabled(false);
+            ui->calibrate_accel_up->setEnabled(false);
+            ui->calibrate_accel_down->setEnabled(false);
+            ui->calibrate_accel_forward->setEnabled(false);
+            ui->calibrate_accel_backward->setEnabled(false);
+            ui->calibrate_accel_left->setEnabled(false);
+            ui->calibrate_accel_right->setEnabled(false);
         }
     }
 }
@@ -65,7 +84,70 @@ void CalibrationForm::cmdResponse(struct anotc_blocking_queue_item item)
         unsigned char percentage = item.frame.frame.data[4];
         ui->gyro_btn->setText(QString("Calibrating gyro %1%...").arg(percentage));
         if (percentage==100) {
-            DLogN("Gyro has been Calibrated");
+            DLogN("Gyro has been calibrated");
+        }
+    } else if (cid==ANOTC_CMD_CALIBRATE_ACCEL) {
+        char direction = item.frame.frame.data[4];
+        unsigned char percentage = item.frame.frame.data[5];
+        switch (direction) {
+        case 0:
+            DLogN("Accelerator has been calibreated");
+            break;
+        case 'U':
+            ui->progressBar_U->setValue(percentage);
+            break;
+        case 'D':
+            ui->progressBar_D->setValue(percentage);
+            break;
+        case 'F':
+            ui->progressBar_F->setValue(percentage);
+            break;
+        case 'B':
+            ui->progressBar_B->setValue(percentage);
+            break;
+        case 'L':
+            ui->progressBar_L->setValue(percentage);
+            break;
+        case 'R':
+            ui->progressBar_R->setValue(percentage);
+            break;
+        default:
+            break;
         }
     }
+}
+
+void CalibrationForm::calibrate_accel()
+{
+    anotc_send_cmd_calibrate_accel(0);
+}
+
+void CalibrationForm::calibrate_accel_up()
+{
+    anotc_send_cmd_calibrate_accel('U');
+}
+
+void CalibrationForm::calibrate_accel_down()
+{
+    anotc_send_cmd_calibrate_accel('D');
+}
+
+void CalibrationForm::calibrate_accel_forward()
+{
+    anotc_send_cmd_calibrate_accel('F');
+}
+
+void CalibrationForm::calibrate_accel_backward()
+{
+    anotc_send_cmd_calibrate_accel('B');
+}
+
+void CalibrationForm::calibrate_accel_left()
+{
+    anotc_send_cmd_calibrate_accel('L');
+}
+
+void CalibrationForm::calibrate_accel_right()
+{
+    anotc_send_cmd_calibrate_accel('R');
 }
