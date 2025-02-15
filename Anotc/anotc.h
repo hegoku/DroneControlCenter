@@ -18,6 +18,7 @@
 #define ANOTC_FRAME_IMU 0x1
 #define ANOTC_FRAME_MAG_BAR_TEMP 0x2
 #define ANOTC_FRAME_EULER 0x3
+#define ANOTC_FRAME_QUAT 0x4
 #define ANOTC_FRAME_ALT 0x5
 #define ANOTC_FRAME_TARGET_ATTITUDE 0xA
 #define ANOTC_FRAME_BATTERY 0xD
@@ -39,7 +40,6 @@
 #define ANOTC_FRAME_LOG_STRING_NUM 0xA1
 
 #define ANOTC_FRAME_CUSTOM_SYSTEM_INFO 0xF1
-#define ANOTC_FRAME_CUSTOM_MIXER_INFO 0xF3
 
 struct anotc_frame {
     unsigned char head;

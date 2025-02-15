@@ -92,7 +92,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>5</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -143,7 +143,7 @@
      <attribute name="title">
       <string>Mixer</string>
      </attribute>
-     <widget class="MixerForm" name="widget_2" native="true">
+     <widget class="MixerForm" name="mixer_form" native="true">
       <property name="geometry">
        <rect>
         <x>0</x>

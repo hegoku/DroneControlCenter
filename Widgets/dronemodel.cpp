@@ -6,6 +6,7 @@
 #include <Qt3DExtras/qfirstpersoncameracontroller.h>
 #include <Qt3DExtras/QDiffuseMapMaterial>
 #include "Anotc/anotc.h"
+#include <QQuaternion>
 
 DroneModel::DroneModel(QWidget *parent)
     : QWidget(parent)
@@ -101,5 +102,12 @@ void DroneModel::onAttitudeUpdate(struct anotc_parsed_data_frame item)
 {
     if (item.func==ANOTC_FRAME_EULER) {
         rotateModel(item.frame_value.at(1).value.f, item.frame_value.at(2).value.f, item.frame_value.at(0).value.f);
+    } else if (item.func==ANOTC_FRAME_QUAT) {
+        float roll,pitch,yaw;
+        QQuaternion q = QQuaternion(item.frame_value.at(0).value.f, item.frame_value.at(1).value.f, item.frame_value.at(2).value.f, item.frame_value.at(3).value.f);
+        // q.getEulerAngles(&pitch, &yaw, &roll);
+        // rotateModel(yaw, roll, pitch);
+        db.m_trans->setRotation(q);
+        db.m_trans->translation();
     }
 }

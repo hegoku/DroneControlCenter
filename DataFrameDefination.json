@@ -101,6 +101,38 @@
         ]
     },
     {
+        "id":4,
+        "name":"Quaternion",
+        "desc":"",
+        "params":[
+            {
+                "name":"q0",
+                "type":"Int16",
+                "desc":"扩大10000"
+            },
+            {
+                "name":"q1",
+                "type":"Int16",
+                "desc":"扩大10000"
+            },
+            {
+                "name":"q2",
+                "type":"Int16",
+                "desc":"扩大10000"
+            },
+            {
+                "name":"q3",
+                "type":"Int16",
+                "desc":"扩大10000"
+            },
+            {
+                "name":"FUNSION",
+                "type":"UInt8",
+                "desc":""
+            }
+        ]
+    },
+    {
         "id":5,
         "name":"Altitude",
         "desc":"",
@@ -123,6 +155,53 @@
             {
                 "name":"ALT_STA",
                 "type":"UInt8",
+                "desc":""
+            }
+        ]
+    },
+    {
+        "id":32,
+        "name":"PWM",
+        "desc":"",
+        "params":[
+            {
+                "name":"PWM1",
+                "type":"UInt16",
+                "desc":""
+            },
+            {
+                "name":"PWM2",
+                "type":"UInt16",
+                "desc":""
+            },
+            {
+                "name":"PWM3",
+                "type":"UInt16",
+                "desc":""
+            },
+            {
+                "name":"PWM4",
+                "type":"UInt16",
+                "desc":""
+            },
+            {
+                "name":"PWM5",
+                "type":"UInt16",
+                "desc":""
+            },
+            {
+                "name":"PWM6",
+                "type":"UInt16",
+                "desc":""
+            },
+            {
+                "name":"PWM7",
+                "type":"UInt16",
+                "desc":""
+            },
+            {
+                "name":"PWM8",
+                "type":"UInt16",
                 "desc":""
             }
         ]

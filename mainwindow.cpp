@@ -42,13 +42,15 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->serialPortWidget, SIGNAL(onConnect()), this, SLOT(onSerialPortConnect()));
     connect(ui->serialPortWidget, SIGNAL(onDisconnect()), this, SLOT(onSerialPortDisconnect()));
     connect(ui->serialPortWidget, &SerialPortPanel::onBeforeDisconnect, this, &MainWindow::onBeforeDisconnect);
-    connect(ui->serialPortWidget, &SerialPortPanel::onConnect, ui->parameter_viewer, &ParameterForm::onConnect);
-    connect(ui->serialPortWidget, &SerialPortPanel::onDisconnect, ui->parameter_viewer, &ParameterForm::onDisconnect);
+
     connect(ui->UDPWidget, SIGNAL(onConnect()), this, SLOT(onUDPConnect()));
     connect(ui->UDPWidget, SIGNAL(onDisconnect()), this, SLOT(onUDPDisconnect()));
     connect(ui->UDPWidget, &UDPPanel::onBeforeDisconnect, this, &MainWindow::onBeforeDisconnect);
-    connect(ui->UDPWidget, &UDPPanel::onConnect, ui->parameter_viewer, &ParameterForm::onConnect);
-    connect(ui->UDPWidget, &UDPPanel::onDisconnect, ui->parameter_viewer, &ParameterForm::onDisconnect);
+
+    connect(this, &MainWindow::onConnect, ui->parameter_viewer, &ParameterForm::onConnect);
+    connect(this, &MainWindow::onDisconnect, ui->parameter_viewer, &ParameterForm::onDisconnect);
+    connect(this, &MainWindow::onConnect, ui->mixer_form, &MixerForm::onConnect);
+    connect(this, &MainWindow::onDisconnect, ui->mixer_form, &MixerForm::onDisconnect);
 
     timer = new QTimer();
     timer->setInterval(100);
@@ -64,6 +66,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(anotc_thread, &AnotcThread::onFlightDataComing, ui->drone_3d_model, &DroneModel::onAttitudeUpdate);
     connect(anotc_thread, &AnotcThread::onFlightDataComing, this, &MainWindow::flightData);
     connect(anotc_thread, &AnotcThread::onFlightDataComing, ui->calibration_form, &CalibrationForm::updateData);
+    connect(anotc_thread, &AnotcThread::onFlightDataComing, ui->mixer_form, &MixerForm::onFlightUpdate);
 
     connect(anotc_thread, &AnotcThread::onFlightParamComing, ui->parameter_viewer, &ParameterForm::updateData);
     connect(anotc_thread, &AnotcThread::onFlightParamComing, this, &MainWindow::getDeviceInfo);
@@ -87,12 +90,14 @@ MainWindow::~MainWindow()
 void MainWindow::onSerialPortConnect()
 {
     ui->UDPTab->setEnabled(false);
+    emit onConnect();
     anotc_send_custom_connect();
     timer->start();
 }
 
 void MainWindow::onSerialPortDisconnect()
 {
+    emit onDisconnect();
     timer->stop();
     anotc_reset();
     ui->UDPTab->setEnabled(true);
@@ -104,12 +109,14 @@ void MainWindow::onSerialPortDisconnect()
 void MainWindow::onUDPConnect()
 {
     ui->SerialPortTab->setEnabled(false);
+    emit onConnect();
     anotc_send_custom_connect();
     timer->start();
 }
 
 void MainWindow::onUDPDisconnect()
 {
+    emit onDisconnect();
     timer->stop();
     anotc_reset();
     ui->SerialPortTab->setEnabled(true);

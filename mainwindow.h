@@ -24,6 +24,10 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+signals:
+    void onConnect();
+    void onDisconnect();
+
 private slots:
     void onSerialPortConnect();
     void onSerialPortDisconnect();

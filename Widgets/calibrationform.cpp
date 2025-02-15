@@ -95,21 +95,39 @@ void CalibrationForm::cmdResponse(struct anotc_blocking_queue_item item)
             break;
         case 'U':
             ui->progressBar_U->setValue(percentage);
+            if (percentage==100) {
+                DLogN("Upward data has been collected");
+            }
             break;
         case 'D':
             ui->progressBar_D->setValue(percentage);
+            if (percentage==100) {
+                DLogN("Downward data has been collected");
+            }
             break;
         case 'F':
             ui->progressBar_F->setValue(percentage);
+            if (percentage==100) {
+                DLogN("Forward data has been collected");
+            }
             break;
         case 'B':
             ui->progressBar_B->setValue(percentage);
+            if (percentage==100) {
+                DLogN("Backward data has been collected");
+            }
             break;
         case 'L':
             ui->progressBar_L->setValue(percentage);
+            if (percentage==100) {
+                DLogN("Left data has been collected");
+            }
             break;
         case 'R':
             ui->progressBar_R->setValue(percentage);
+            if (percentage==100) {
+                DLogN("Right data has been collected");
+            }
             break;
         default:
             break;

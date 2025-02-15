@@ -76,6 +76,7 @@ void loadDataFrameDefination(QString path)
 
     anotc_frame_defination_list.value(ANOTC_FRAME_IMU)->formater = anotc_imu_formater;
     anotc_frame_defination_list.value(ANOTC_FRAME_EULER)->formater = anotc_euler_formater;
+    anotc_frame_defination_list.value(ANOTC_FRAME_QUAT)->formater = anotc_quat_formater;
     anotc_frame_defination_list.value(ANOTC_FRAME_ALT)->formater = anotc_alt_formater;
 }
 
@@ -190,11 +191,19 @@ void anotc_imu_formater(QList<struct anotc_value> *frame_value)
 
 void anotc_euler_formater(QList<struct anotc_value> *frame_value)
 {
-    for (int i=0;i<frame_value->size();i++) {
-        if (frame_value->at(i).name.compare("ROLL")==0 || frame_value->at(i).name.compare("PITCH")==0 || frame_value->at(i).name.compare("YAW")==0) {
+    for (int i=0;i<frame_value->size()-1;i++) {
+        // if (frame_value->at(i).name.compare("ROLL")==0 || frame_value->at(i).name.compare("PITCH")==0 || frame_value->at(i).name.compare("YAW")==0) {
             (*frame_value)[i].type = 8;
             (*frame_value)[i].value.f = ((float)frame_value->at(i).value.int16) / 100.0;
-        }
+        // }
+    }
+}
+
+void anotc_quat_formater(QList<struct anotc_value> *frame_value)
+{
+    for (int i=0;i<frame_value->size()-1;i++) {
+        (*frame_value)[i].type = 8;
+        (*frame_value)[i].value.f = ((float)frame_value->at(i).value.int16) / 10000.0;
     }
 }
 
