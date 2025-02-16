@@ -297,6 +297,9 @@
    <property name="alignment">
     <set>Qt::AlignmentFlag::AlignCenter</set>
    </property>
+   <property name="format">
+    <string>%v</string>
+   </property>
   </widget>
   <widget class="QProgressBar" name="motor_2_throttle">
    <property name="geometry">
@@ -315,6 +318,12 @@
    </property>
    <property name="alignment">
     <set>Qt::AlignmentFlag::AlignCenter</set>
+   </property>
+   <property name="invertedAppearance">
+    <bool>true</bool>
+   </property>
+   <property name="format">
+    <string>%v</string>
    </property>
   </widget>
   <widget class="QProgressBar" name="motor_3_throttle">
@@ -335,6 +344,12 @@
    <property name="alignment">
     <set>Qt::AlignmentFlag::AlignCenter</set>
    </property>
+   <property name="invertedAppearance">
+    <bool>true</bool>
+   </property>
+   <property name="format">
+    <string>%v</string>
+   </property>
   </widget>
   <widget class="QProgressBar" name="motor_4_throttle">
    <property name="geometry">
@@ -353,6 +368,12 @@
    </property>
    <property name="alignment">
     <set>Qt::AlignmentFlag::AlignCenter</set>
+   </property>
+   <property name="invertedAppearance">
+    <bool>true</bool>
+   </property>
+   <property name="format">
+    <string>%v</string>
    </property>
   </widget>
  </widget>

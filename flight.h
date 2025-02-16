@@ -1,6 +1,13 @@
 #ifndef FLIGHT_H
 #define FLIGHT_H
 
+#define MOTOR_MAPPING_VALUE(x,i) ((x & (0xFUL<<(i*4)))>>(i*4))
+#define MOTOR_GET_INDEX(v) (v & 0x7UL)
+#define MOTOR_IS_REVERSE(v) (v & 0x8UL)
+
+#define MOTOR_SET_REVERSE(i,r) (r==0?(i):(i|0x8U))
+#define MOTOR_PUT_MAPPING_VALUE(v, p,i,r) (v | (MOTOR_SET_REVERSE(i,r)<<(p*4)))
+
 enum flight_status {
     FLIGHT_STATUS_READY,
     FLIGHT_STATUS_ANGLE_RATE_MODE,

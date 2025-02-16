@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     MainWindow::instance = this;
+
     ui->setupUi(this);
 
     DLog_print = MainWindow::printLog;
