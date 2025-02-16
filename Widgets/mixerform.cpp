@@ -3,6 +3,8 @@
 #include "ui_mixerform.h"
 #include "Anotc/anotc_cmd_frame.h"
 #include "flight.h"
+#include "Anotc/anotc_config_frame.h"
+#include "DLog.h"
 
 MixerForm::MixerForm(QWidget *parent)
     : QWidget(parent)
@@ -142,6 +144,8 @@ void MixerForm::onMotorAllSliderChange(int value)
 
 void MixerForm::saveConfig()
 {
+    unsigned char protocol = ui->esc_protocol_list->currentIndex();
+    anotc_send_config_set_param(ANOTC_CONFIG_PAR_ESC_PROTOCOL, 0, &protocol);
     anotc_send_cmd_reboot();
 }
 
@@ -149,6 +153,7 @@ void MixerForm::onConnect()
 {
     ui->save_btn->setEnabled(true);
     ui->enableMotorTestMode->setEnabled(true);
+    // anotc_send_config_get_param_value(ANOTC_CONFIG_PAR_ESC_PROTOCOL);
 }
 
 void MixerForm::onDisconnect()
@@ -161,3 +166,15 @@ void MixerForm::onDisconnect()
     ui->motor_4_slider->setEnabled(false);
     ui->motor_all_slider->setEnabled(false);
 }
+
+void MixerForm::paramUpdated(struct anotc_parsed_parameter_frame item)
+{
+    if (item.func==ANOTC_FRAME_CONFIG_READ_WRITE) {
+        unsigned short par_id = item.frame_value.value(0).value.uint16;
+        if (par_id==ANOTC_CONFIG_PAR_ESC_PROTOCOL) {
+            unsigned char protocol = (unsigned char)item.frame_value.value(1).string.toLatin1().data()[0];
+            ui->esc_protocol_list->setCurrentIndex(protocol);
+        }
+    }
+}
+

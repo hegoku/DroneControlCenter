@@ -71,6 +71,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(anotc_thread, &AnotcThread::onFlightParamComing, ui->parameter_viewer, &ParameterForm::updateData);
     connect(anotc_thread, &AnotcThread::onFlightParamComing, this, &MainWindow::getDeviceInfo);
+    connect(anotc_thread, &AnotcThread::onFlightParamComing, ui->mixer_form, &MixerForm::paramUpdated);
 
     connect(anotc_thread, &AnotcThread::onCMDResponseComing, ui->calibration_form, &CalibrationForm::cmdResponse);
 
@@ -91,8 +92,8 @@ MainWindow::~MainWindow()
 void MainWindow::onSerialPortConnect()
 {
     ui->UDPTab->setEnabled(false);
-    emit onConnect();
     anotc_send_custom_connect();
+    emit onConnect();
     timer->start();
 }
 
@@ -110,8 +111,8 @@ void MainWindow::onSerialPortDisconnect()
 void MainWindow::onUDPConnect()
 {
     ui->SerialPortTab->setEnabled(false);
-    emit onConnect();
     anotc_send_custom_connect();
+    emit onConnect();
     timer->start();
 }
 

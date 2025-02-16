@@ -28,6 +28,12 @@ CalibrationForm::~CalibrationForm()
 
 void CalibrationForm::calibrate_gyro()
 {
+    ui->progressBar_U->setValue(0);
+    ui->progressBar_D->setValue(0);
+    ui->progressBar_F->setValue(0);
+    ui->progressBar_B->setValue(0);
+    ui->progressBar_L->setValue(0);
+    ui->progressBar_R->setValue(0);
     anotc_send_cmd_calibrate_gyro();
 }
 

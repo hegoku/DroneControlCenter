@@ -269,14 +269,14 @@
   <widget class="QPushButton" name="save_btn">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>20</y>
+     <x>140</x>
+     <y>30</y>
      <width>100</width>
      <height>32</height>
     </rect>
    </property>
    <property name="text">
-    <string>Save</string>
+    <string>Save &amp; Reboot</string>
    </property>
   </widget>
   <widget class="QProgressBar" name="motor_1_throttle">
@@ -320,7 +320,7 @@
     <set>Qt::AlignmentFlag::AlignCenter</set>
    </property>
    <property name="invertedAppearance">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="format">
     <string>%v</string>
@@ -345,7 +345,7 @@
     <set>Qt::AlignmentFlag::AlignCenter</set>
    </property>
    <property name="invertedAppearance">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="format">
     <string>%v</string>
@@ -370,11 +370,31 @@
     <set>Qt::AlignmentFlag::AlignCenter</set>
    </property>
    <property name="invertedAppearance">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="format">
     <string>%v</string>
    </property>
+  </widget>
+  <widget class="QComboBox" name="esc_protocol_list">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>30</y>
+     <width>103</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>Bushed</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>DSHOT300</string>
+    </property>
+   </item>
   </widget>
  </widget>
  <resources/>

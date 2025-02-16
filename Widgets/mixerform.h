@@ -4,6 +4,8 @@
 #include <QWidget>
 #include "Anotc/anotc.h"
 #include "Anotc/anotc_data_frame.h"
+#include "Anotc/anotc_config_frame.h"
+#include "Anotc/anotc_receive_check.h"
 #include "flight.h"
 
 namespace Ui {
@@ -29,6 +31,7 @@ public slots:
     void saveConfig();
     void onConnect();
     void onDisconnect();
+    void paramUpdated(struct anotc_parsed_parameter_frame);
 
 private:
     Ui::MixerForm *ui;
