@@ -46,6 +46,7 @@ private:
     QMap<unsigned char, QString> par_type_map;
 
     QMap<unsigned short, unsigned char> changed_par;
+    QMap<unsigned short, unsigned char> refresh_par;
 
     void insertParam(struct anotc_parameter_defination*);
     void formatAndSendParam(unsigned short row);

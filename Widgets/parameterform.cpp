@@ -55,6 +55,7 @@ void ParameterForm::readParameter()
         free(itor.value());
     }
     anotc_parameter_defination_list.clear();
+    refresh_par.clear();
     model->removeRows(0, model->rowCount());
     anotc_send_config_get_count();
 }
@@ -81,6 +82,7 @@ void ParameterForm::updateData(struct anotc_parsed_parameter_frame item)
         d->par_info = item.frame_value.value(3).string;
         anotc_parameter_defination_list.insert(d->par_id, d);
         insertParam(d);
+        refresh_par.insert(d->par_id, 1);
         if (param_count>d->par_id+1) {
             // QMetaObject::invokeMethod(this, [=]{
                 anotc_send_config_get_param_info(d->par_id+1);
@@ -92,6 +94,8 @@ void ParameterForm::updateData(struct anotc_parsed_parameter_frame item)
         changed_par.clear();
     } else if (item.func==ANOTC_FRAME_CONFIG_READ_WRITE) {
         unsigned short par_id = item.frame_value.value(0).value.uint16;
+        if (!model->hasIndex(par_id, 1)) return;
+        // if (!refresh_par.contains(par_id)) return;
         unsigned char *tmp = (unsigned char*)malloc(sizeof(unsigned char)*item.frame_value.value(1).string.length());
         for (int i=0;i<item.frame_value.value(1).string.length();i++) {
             tmp[i] = (unsigned char)item.frame_value.value(1).string.toLatin1().data()[i];
@@ -127,8 +131,14 @@ void ParameterForm::updateData(struct anotc_parsed_parameter_frame item)
         }
         model->item(par_id, 1)->setEditable(true);
 
-        if (param_count>par_id+1) {
-            anotc_send_config_get_param_value(par_id+1);
+        if (refresh_par.contains(par_id)) {
+            refresh_par.remove(par_id);
+        }
+        if (!refresh_par.isEmpty()) {
+            anotc_send_config_get_param_value(refresh_par.firstKey());
+        // }
+        // if (param_count>par_id+1) {
+            // anotc_send_config_get_param_value(par_id+1);
         } else {
             DLogN(QString("Read parameters' value done"));
         }
@@ -139,9 +149,11 @@ void ParameterForm::updateData(struct anotc_parsed_parameter_frame item)
 void ParameterForm::receiveCheckFrame(struct anotc_parsed_check_frame item)
 {
     if (item.func==ANOTC_FRAME_CONFIG_READ_WRITE) {
+        if (changed_par.isEmpty()) return;
         if (item.code) {
             DLogE(item.msg);
         }
+        refresh_par.insert(changed_par.firstKey(), 1);
         changed_par.remove(changed_par.firstKey());
         if (changed_par.isEmpty()==false) {
             formatAndSendParam(changed_par.firstKey());
@@ -150,8 +162,10 @@ void ParameterForm::receiveCheckFrame(struct anotc_parsed_check_frame item)
             anotc_send_config_save_param();
         }
     } else if (item.func==ANOTC_FRAME_CONFIG_CMD) {
+        if (refresh_par.isEmpty()) return;
         DLogN(QString("Save parameters' value done<br/>start to refresh parameters ..."));
-        anotc_send_config_get_count();
+        anotc_send_config_get_param_value(refresh_par.firstKey());
+        // anotc_send_config_get_count();
     }
 }
 
@@ -265,6 +279,7 @@ void ParameterForm::onConnect()
     ui->readBtn->setEnabled(true);
     ui->sendBtn->setEnabled(true);
     changed_par.clear();
+    refresh_par.clear();
     anotc_parameter_defination_list.clear();
     model->removeRows(0, model->rowCount());
 

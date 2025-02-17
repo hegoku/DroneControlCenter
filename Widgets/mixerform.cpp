@@ -153,7 +153,7 @@ void MixerForm::onConnect()
 {
     ui->save_btn->setEnabled(true);
     ui->enableMotorTestMode->setEnabled(true);
-    // anotc_send_config_get_param_value(ANOTC_CONFIG_PAR_ESC_PROTOCOL);
+    anotc_send_config_get_param_value(ANOTC_CONFIG_PAR_ESC_PROTOCOL);
 }
 
 void MixerForm::onDisconnect()
