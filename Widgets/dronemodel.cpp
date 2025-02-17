@@ -101,7 +101,7 @@ void DroneModel::rotateModel(float x, float y, float z)
 void DroneModel::onAttitudeUpdate(struct anotc_parsed_data_frame item)
 {
     if (item.func==ANOTC_FRAME_EULER) {
-        rotateModel(item.frame_value.at(1).value.f, item.frame_value.at(2).value.f, item.frame_value.at(0).value.f);
+        rotateModel(-item.frame_value.at(1).value.f, -item.frame_value.at(2).value.f, -item.frame_value.at(0).value.f);
     } else if (item.func==ANOTC_FRAME_QUAT) {
         float roll,pitch,yaw;
         QQuaternion q = QQuaternion(item.frame_value.at(0).value.f, item.frame_value.at(1).value.f, item.frame_value.at(2).value.f, item.frame_value.at(3).value.f);

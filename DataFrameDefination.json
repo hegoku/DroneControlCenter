@@ -63,7 +63,7 @@
             },
             {
                 "name":"TEMP",
-                "type":"UInt16",
+                "type":"Int16",
                 "desc":""
             },
             {

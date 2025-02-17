@@ -48,6 +48,7 @@ void loadDataFrameDefination(QString path);
 int anotc_parse_data_frame(union _un_anotc_v8_frame *frame, QList<struct anotc_value> *frame_value);
 
 void anotc_imu_formater(QList<struct anotc_value> *frame_value);
+void anotc_compass_formater(QList<struct anotc_value> *frame_value);
 void anotc_euler_formater(QList<struct anotc_value> *frame_value);
 void anotc_quat_formater(QList<struct anotc_value> *frame_value);
 void anotc_alt_formater(QList<struct anotc_value> *frame_value);

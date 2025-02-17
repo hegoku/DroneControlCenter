@@ -75,6 +75,7 @@ void loadDataFrameDefination(QString path)
     }
 
     anotc_frame_defination_list.value(ANOTC_FRAME_IMU)->formater = anotc_imu_formater;
+    anotc_frame_defination_list.value(ANOTC_FRAME_MAG)->formater = anotc_compass_formater;
     anotc_frame_defination_list.value(ANOTC_FRAME_EULER)->formater = anotc_euler_formater;
     anotc_frame_defination_list.value(ANOTC_FRAME_QUAT)->formater = anotc_quat_formater;
     anotc_frame_defination_list.value(ANOTC_FRAME_ALT)->formater = anotc_alt_formater;
@@ -187,6 +188,12 @@ void anotc_imu_formater(QList<struct anotc_value> *frame_value)
             (*frame_value)[i].value.f = ((float)frame_value->at(i).value.int16) / 100.0;
         }
     }
+}
+
+void anotc_compass_formater(QList<struct anotc_value> *frame_value)
+{
+    (*frame_value)[3].type = 8; //temperature
+    (*frame_value)[3].value.f = ((float)frame_value->at(3).value.int16) / 10.0;
 }
 
 void anotc_euler_formater(QList<struct anotc_value> *frame_value)
