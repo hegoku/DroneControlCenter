@@ -75,7 +75,7 @@ void ParameterForm::updateData(struct anotc_parsed_parameter_frame item)
             }
         }
     } else if (item.func==ANOTC_FRAME_CONFIG_INFO) {
-        struct anotc_parameter_defination *d = (struct anotc_parameter_defination*)malloc(sizeof(struct anotc_parameter_defination));
+        struct anotc_parameter_defination *d = new struct anotc_parameter_defination;
         d->par_id = item.frame_value.value(0).value.uint16;
         d->par_type = item.frame_value.value(1).value.uint8;
         d->par_name = item.frame_value.value(2).string;

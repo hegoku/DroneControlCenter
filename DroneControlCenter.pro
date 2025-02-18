@@ -74,6 +74,8 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
+win32:LIBS += -L$$PWD/./ -lpthread libwsock32 libws2_32
+
 macx {
 QMAKE_APPLE_DEVICE_ARCHS = x86_64 arm64
 }

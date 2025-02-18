@@ -43,8 +43,8 @@
 
 struct anotc_frame {
     unsigned char head;
-    unsigned char s_addr;
-    unsigned char d_addr;
+    unsigned char saddr;
+    unsigned char daddr;
     unsigned char fun;
     unsigned short len;
     unsigned char data[ANOTC_DATA_MAX_SIZE];
@@ -65,8 +65,8 @@ Q_DECLARE_METATYPE(struct anotc_blocking_queue_item);
 
 #define PREPARE_ANOTC_FRAME(frame) { \
 frame.head = ANOTC_V8_HEAD;\
-    frame.s_addr = 0xFE;\
-    frame.d_addr = 0x01;\
+    frame.saddr = 0xFE;\
+    frame.daddr = 0x01;\
     frame.len = 0;\
 }
 
