@@ -52,7 +52,11 @@ void UDPThread::closeConnect()
     // UDPThread::mutex.lock();
     is_bind = false;
     this->quit();
+#ifdef _WIN64
+    closesocket(socket_desc);
+#else
     close(socket_desc);
+#endif
     // UDPThread::mutex.unlock();
     emit onDisconnect();
 }

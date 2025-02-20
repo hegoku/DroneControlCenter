@@ -3,8 +3,16 @@
 
 #include <QObject>
 #include <QThread>
+
+#ifdef _WIN64
+#include <winsock2.h>
+#include <windows.h>
+typedef int socklen_t;
+#else
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#endif
+
 #include <QByteArray>
 #include <QMutex>
 
@@ -26,7 +34,11 @@ signals:
     void onDisconnect();
 
 private:
+#ifdef _WIN64
+    SOCKET socket_desc;
+#else
     int socket_desc;
+#endif
     struct sockaddr_in server_addr, client_addr;
     bool is_bind;
     char rx_buffer[2048];

@@ -57,7 +57,7 @@ void loadDataFrameDefination(QString path)
     struct anotc_frame_param *p;
     for (int i=0;i<root.size();i++) {
         QJsonObject func = root.at(i).toObject();
-        de = (struct anotc_frame_defination*)malloc(sizeof(struct anotc_frame_defination));
+        de = new struct anotc_frame_defination;
         de->func = (unsigned char)func.value("id").toInt();
         de->name = func.value("name").toString();
         de->desc = func.value("desc").toString();
@@ -65,7 +65,7 @@ void loadDataFrameDefination(QString path)
         QJsonArray params = func.value("params").toArray();
         for (int j=0;j<params.size();j++) {
             QJsonObject param = params.at(j).toObject();
-            p = (struct anotc_frame_param*)malloc(sizeof(struct anotc_frame_param));
+            p = new struct anotc_frame_param;
             p->name = param.value("name").toString();
             p->desc = param.value("desc").toString();
             p->type = param.value("type").toString();
