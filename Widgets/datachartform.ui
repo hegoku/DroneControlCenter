@@ -23,16 +23,6 @@
     </rect>
    </property>
   </widget>
-  <widget class="DataAnalysicsChart" name="widget" native="true">
-   <property name="geometry">
-    <rect>
-     <x>240</x>
-     <y>10</y>
-     <width>591</width>
-     <height>521</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QPushButton" name="pushButton">
    <property name="geometry">
     <rect>
@@ -46,13 +36,22 @@
     <string>Start</string>
    </property>
   </widget>
+  <widget class="DataAnalysicsChart" name="chartView">
+   <property name="geometry">
+    <rect>
+     <x>240</x>
+     <y>10</y>
+     <width>601</width>
+     <height>521</height>
+    </rect>
+   </property>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>
    <class>DataAnalysicsChart</class>
-   <extends>QWidget</extends>
+   <extends>QGraphicsView</extends>
    <header>Widgets/dataanalysicschart.h</header>
-   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

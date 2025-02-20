@@ -84,4 +84,5 @@ RESOURCES += \
     mysource.qrc
 
 DISTFILES += \
-    DataFrameDefination.json
+    DataFrameDefination.json \
+    style/mixer_style.qss

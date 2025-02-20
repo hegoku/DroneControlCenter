@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>3dmodel/quad_x/quad_x.obj</file>
         <file>DataFrameDefination.json</file>
+        <file>style/mixer_style.qss</file>
     </qresource>
 </RCC>

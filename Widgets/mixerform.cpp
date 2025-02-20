@@ -5,12 +5,18 @@
 #include "flight.h"
 #include "Anotc/anotc_config_frame.h"
 #include "DLog.h"
+#include <QFile>
 
 MixerForm::MixerForm(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::MixerForm)
 {
     ui->setupUi(this);
+
+    QFile styleFile(":/style/mixer_style.qss");
+    styleFile.open(QFile::ReadOnly);
+    QString style = QLatin1String(styleFile.readAll());
+    this->setStyleSheet(style);
 
     connect(ui->save_btn, &QPushButton::clicked, this, &MixerForm::saveConfig);
 
