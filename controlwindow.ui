@@ -19,11 +19,14 @@
      <rect>
       <x>30</x>
       <y>70</y>
-      <width>261</width>
+      <width>310</width>
       <height>161</height>
      </rect>
     </property>
-    <layout class="QGridLayout" name="gridLayout">
+    <layout class="QGridLayout" name="gridLayout" columnminimumwidth="41,41,41,41,41,41">
+     <property name="sizeConstraint">
+      <enum>QLayout::SizeConstraint::SetNoConstraint</enum>
+     </property>
      <item row="0" column="3">
       <widget class="QSlider" name="yaw_slider">
        <property name="minimum">
@@ -31,6 +34,12 @@
        </property>
        <property name="maximum">
         <number>2000</number>
+       </property>
+       <property name="pageStep">
+        <number>1</number>
+       </property>
+       <property name="value">
+        <number>1500</number>
        </property>
        <property name="orientation">
         <enum>Qt::Orientation::Vertical</enum>
@@ -45,18 +54,11 @@
        <property name="maximum">
         <number>2000</number>
        </property>
+       <property name="pageStep">
+        <number>1</number>
+       </property>
        <property name="orientation">
         <enum>Qt::Orientation::Vertical</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="throttle_value">
-       <property name="text">
-        <string>1000</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
       </widget>
      </item>
@@ -67,6 +69,12 @@
        </property>
        <property name="maximum">
         <number>2000</number>
+       </property>
+       <property name="pageStep">
+        <number>1</number>
+       </property>
+       <property name="value">
+        <number>1500</number>
        </property>
        <property name="orientation">
         <enum>Qt::Orientation::Vertical</enum>
@@ -80,6 +88,12 @@
        </property>
        <property name="maximum">
         <number>2000</number>
+       </property>
+       <property name="pageStep">
+        <number>1</number>
+       </property>
+       <property name="value">
+        <number>1500</number>
        </property>
        <property name="orientation">
         <enum>Qt::Orientation::Vertical</enum>
@@ -136,10 +150,20 @@
        </property>
       </widget>
      </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="throttle_value">
+       <property name="text">
+        <string>1000</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
      <item row="1" column="1">
       <widget class="QLabel" name="roll_value">
        <property name="text">
-        <string>1000</string>
+        <string>1500</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -149,7 +173,7 @@
      <item row="1" column="2">
       <widget class="QLabel" name="pitch_value">
        <property name="text">
-        <string>1000</string>
+        <string>1500</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -159,7 +183,7 @@
      <item row="1" column="3">
       <widget class="QLabel" name="yaw_value">
        <property name="text">
-        <string>1000</string>
+        <string>1500</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignCenter</set>

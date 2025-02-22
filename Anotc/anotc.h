@@ -40,6 +40,7 @@
 #define ANOTC_FRAME_LOG_STRING_NUM 0xA1
 
 #define ANOTC_FRAME_CUSTOM_SYSTEM_INFO 0xF1
+#define ANOTC_FRAME_CUSTOM_PID 0xF2
 
 struct anotc_frame {
     unsigned char head;

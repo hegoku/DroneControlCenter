@@ -18,6 +18,8 @@ public:
     unsigned int max_x_range;
 
     void setAutoScroll(bool value);
+    void setXAxisRange(qreal min, qreal max);
+    int getXSize();
 
 public slots:
     void addPoint(QString series, unsigned int x, float y);

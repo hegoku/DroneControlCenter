@@ -14,6 +14,27 @@ RCForm::RCForm(QWidget *parent)
     ui->save_btn->setEnabled(false);
     ui->protocol_list->setEnabled(false);
 
+    channel_bar.append(ui->throttle_bar);
+    channel_bar.append(ui->roll_bar);
+    channel_bar.append(ui->pitch_bar);
+    channel_bar.append(ui->yaw_bar);
+    channel_bar.append(ui->aux1_bar);
+    channel_bar.append(ui->aux2_bar);
+    channel_bar.append(ui->aux3_bar);
+    channel_bar.append(ui->aux4_bar);
+    channel_bar.append(ui->aux5_bar);
+    channel_bar.append(ui->aux6_bar);
+    channel_bar.append(ui->aux7_bar);
+    channel_bar.append(ui->aux8_bar);
+    channel_bar.append(ui->aux9_bar);
+    channel_bar.append(ui->aux10_bar);
+
+    for (int i=0;i<channel_bar.size();i++) {
+        channel_bar.value(i)->setMin(1000);
+        channel_bar.value(i)->setMax(2000);
+    }
+
+
     connect(ui->save_btn, &QPushButton::clicked, this, &RCForm::saveConfig);
     connect(ui->show_control_win, &QPushButton::clicked, this, &RCForm::showControlWin);
     control_win = new ControlWindow(this);
@@ -74,6 +95,10 @@ void RCForm::onFlightUpdate(struct anotc_parsed_data_frame item)
         } else {
             ui->save_btn->setEnabled(true);
             ui->protocol_list->setEnabled(true);
+        }
+    } else if (item.func==ANOTC_FRAME_RC) {
+        for (int i=0;i<14;i++) {
+            channel_bar.value(i)->setValue(item.frame_value.at(i).value.uint16);
         }
     }
 }

@@ -45,10 +45,13 @@ void DataChartForm::onDataComing()
     if (t%100==0) {
         ui->chartView->addPoint("Y", t, y);
     }
-    ui->horizontalScrollBar->setRange(0,t);
+    // ui->horizontalScrollBar->setValue(ui->horizontalScrollBar->maximum());
+    // ui->horizontalScrollBar->setRange(0,t);
 }
 
 void DataChartForm::changeScroll(int value)
 {
     qDebug("%d", value);
+    unsigned int a = value*ui->chartView->getXSize()/ui->horizontalScrollBar->maximum();
+    ui->chartView->setXAxisRange(a-ui->chartView->max_x_range, a);
 }

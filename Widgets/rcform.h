@@ -8,6 +8,7 @@
 #include "Anotc/anotc_receive_check.h"
 #include "flight.h"
 #include "controlwindow.h"
+#include "Widgets/rcchannelbar.h"
 
 namespace Ui {
 class RCForm;
@@ -33,6 +34,7 @@ private:
     Ui::RCForm *ui;
 
     ControlWindow *control_win;
+    QList<RCChannelBar*> channel_bar;
 };
 
 #endif // RCFORM_H

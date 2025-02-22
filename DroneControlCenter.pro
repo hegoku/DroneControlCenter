@@ -24,6 +24,7 @@ SOURCES += \
     Widgets/datatable.cpp \
     Widgets/mixerform.cpp \
     Widgets/parameterform.cpp \
+    Widgets/rcchannelbar.cpp \
     Widgets/rcform.cpp \
     Widgets/serialportworker.cpp \
     Widgets/dronemodel.cpp \
@@ -50,6 +51,7 @@ HEADERS += \
     Widgets/datatable.h \
     Widgets/mixerform.h \
     Widgets/parameterform.h \
+    Widgets/rcchannelbar.h \
     Widgets/rcform.h \
     Widgets/serialportworker.h \
     Widgets/dronemodel.h \
@@ -67,6 +69,7 @@ FORMS += \
     Widgets/dronemodel.ui \
     Widgets/mixerform.ui \
     Widgets/parameterform.ui \
+    Widgets/rcchannelbar.ui \
     Widgets/rcform.ui \
     Widgets/serialportpanel.ui \
     Widgets/udppanel.ui \

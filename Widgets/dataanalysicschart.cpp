@@ -38,8 +38,8 @@ void DataAnalysicsChart::addPoint(QString series, unsigned int x, float y)
     if (series_list.contains(series)) {
         series_list.value(series)->append(x, y);
         if(autoScroll && x > max_x_range) {
-            qreal scroll = chart->plotArea().width() / max_x_range;
-            chart->scroll(scroll,0);
+            // qreal scroll = chart->plotArea().width() / max_x_range;
+            // chart->scroll(scroll,0);
             axisX->setRange(x-max_x_range, x);
         }
         if (min>y) {
@@ -59,4 +59,14 @@ void DataAnalysicsChart::addPoint(QString series, unsigned int x, float y)
 void DataAnalysicsChart::setAutoScroll(bool value)
 {
     autoScroll = value;
+}
+
+void DataAnalysicsChart::setXAxisRange(qreal min, qreal max)
+{
+    axisX->setRange(min, max);
+}
+
+int DataAnalysicsChart::getXSize()
+{
+    return max;
 }
