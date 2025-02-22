@@ -21,6 +21,7 @@ public:
 
 public slots:
     void onDataComing();
+    void changeScroll(int value);
 
 signals:
     void draw(QString name, float x, float y);

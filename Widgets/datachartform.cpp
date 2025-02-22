@@ -10,6 +10,8 @@ DataChartForm::DataChartForm(QWidget *parent)
 {
     ui->setupUi(this);
 
+    connect(ui->horizontalScrollBar, &QScrollBar::valueChanged, this, &DataChartForm::changeScroll);
+
     ui->chartView->addLine("X");
     ui->chartView->addLine("Y");
 
@@ -22,7 +24,7 @@ DataChartForm::DataChartForm(QWidget *parent)
     // timer->moveToThread(timerThread);
     connect(timer, &QTimer::timeout, this, &DataChartForm::onDataComing);
     timer->setInterval(1);
-    timer->start();
+    // timer->start();
     // timerThread->start();
 }
 
@@ -39,4 +41,14 @@ void DataChartForm::onDataComing()
     // emit draw("X", 0, 1234);
     // series->append(t, y);
     ui->chartView->addPoint("X", t, y);
+    y=cos(2*3.14*t);
+    if (t%100==0) {
+        ui->chartView->addPoint("Y", t, y);
+    }
+    ui->horizontalScrollBar->setRange(0,t);
+}
+
+void DataChartForm::changeScroll(int value)
+{
+    qDebug("%d", value);
 }

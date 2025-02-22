@@ -17,6 +17,8 @@ public:
     unsigned int max_points;
     unsigned int max_x_range;
 
+    void setAutoScroll(bool value);
+
 public slots:
     void addPoint(QString series, unsigned int x, float y);
 
@@ -27,6 +29,8 @@ private:
     float min;
     float max;
     QHash<QString, QLineSeries*> series_list;
+
+    bool autoScroll;
 };
 
 #endif // DATAANALYSICSCHART_H
