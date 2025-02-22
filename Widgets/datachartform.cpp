@@ -22,7 +22,7 @@ DataChartForm::DataChartForm(QWidget *parent)
     // timer->moveToThread(timerThread);
     connect(timer, &QTimer::timeout, this, &DataChartForm::onDataComing);
     timer->setInterval(1);
-    timer->start();
+    // timer->start();
     // timerThread->start();
 }
 
