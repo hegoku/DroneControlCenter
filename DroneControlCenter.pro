@@ -24,10 +24,12 @@ SOURCES += \
     Widgets/datatable.cpp \
     Widgets/mixerform.cpp \
     Widgets/parameterform.cpp \
+    Widgets/rcform.cpp \
     Widgets/serialportworker.cpp \
     Widgets/dronemodel.cpp \
     Widgets/serialportpanel.cpp \
     Widgets/udppanel.cpp \
+    controlwindow.cpp \
     main.cpp \
     mainwindow.cpp \
     udpthread.cpp
@@ -48,10 +50,12 @@ HEADERS += \
     Widgets/datatable.h \
     Widgets/mixerform.h \
     Widgets/parameterform.h \
+    Widgets/rcform.h \
     Widgets/serialportworker.h \
     Widgets/dronemodel.h \
     Widgets/serialportpanel.h \
     Widgets/udppanel.h \
+    controlwindow.h \
     flight.h \
     mainwindow.h \
     udpthread.h
@@ -63,8 +67,10 @@ FORMS += \
     Widgets/dronemodel.ui \
     Widgets/mixerform.ui \
     Widgets/parameterform.ui \
+    Widgets/rcform.ui \
     Widgets/serialportpanel.ui \
     Widgets/udppanel.ui \
+    controlwindow.ui \
     mainwindow.ui
 
 QT += serialport charts network 3dcore 3drender 3dinput 3dlogic 3dextras 3danimation

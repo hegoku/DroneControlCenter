@@ -52,6 +52,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this, &MainWindow::onDisconnect, ui->parameter_viewer, &ParameterForm::onDisconnect);
     connect(this, &MainWindow::onConnect, ui->mixer_form, &MixerForm::onConnect);
     connect(this, &MainWindow::onDisconnect, ui->mixer_form, &MixerForm::onDisconnect);
+    connect(this, &MainWindow::onConnect, ui->rc_form, &RCForm::onConnect);
+    connect(this, &MainWindow::onDisconnect, ui->rc_form, &RCForm::onDisconnect);
 
     timer = new QTimer();
     timer->setInterval(100);
@@ -68,10 +70,12 @@ MainWindow::MainWindow(QWidget *parent)
     connect(anotc_thread, &AnotcThread::onFlightDataComing, this, &MainWindow::flightData);
     connect(anotc_thread, &AnotcThread::onFlightDataComing, ui->calibration_form, &CalibrationForm::updateData);
     connect(anotc_thread, &AnotcThread::onFlightDataComing, ui->mixer_form, &MixerForm::onFlightUpdate);
+    connect(anotc_thread, &AnotcThread::onFlightDataComing, ui->rc_form, &RCForm::onFlightUpdate);
 
     connect(anotc_thread, &AnotcThread::onFlightParamComing, ui->parameter_viewer, &ParameterForm::updateData);
     connect(anotc_thread, &AnotcThread::onFlightParamComing, this, &MainWindow::getDeviceInfo);
     connect(anotc_thread, &AnotcThread::onFlightParamComing, ui->mixer_form, &MixerForm::paramUpdated);
+    connect(anotc_thread, &AnotcThread::onFlightParamComing, ui->rc_form, &RCForm::paramUpdated);
 
     connect(anotc_thread, &AnotcThread::onCMDResponseComing, ui->calibration_form, &CalibrationForm::cmdResponse);
 
