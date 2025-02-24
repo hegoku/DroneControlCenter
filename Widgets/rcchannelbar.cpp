@@ -16,7 +16,7 @@ RCChannelBar::RCChannelBar(QWidget *parent)
     min = 0;
     max = 100;
     background_color = QString("#ffffff");
-    chunk_color = QString("blue");
+    chunk_color = QString("#FEB125");
     text_color = QString("black");
 }
 

@@ -1,6 +1,6 @@
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
 CONFIG += c++17
 
@@ -33,7 +33,9 @@ SOURCES += \
     controlwindow.cpp \
     main.cpp \
     mainwindow.cpp \
-    udpthread.cpp
+    qcustomplot.cpp \
+    udpthread.cpp \
+    util.cpp
 
 HEADERS += \
     Anotc/anotc.h \
@@ -60,7 +62,9 @@ HEADERS += \
     controlwindow.h \
     flight.h \
     mainwindow.h \
-    udpthread.h
+    qcustomplot.h \
+    udpthread.h \
+    util.h
 
 FORMS += \
     Widgets/calibrationform.ui \

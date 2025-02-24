@@ -3,6 +3,10 @@
 
 #include <QWidget>
 #include <QLineSeries>
+#include <QHash>
+#include <QList>
+#include <Anotc/anotc_data_frame.h>
+#include "util.h"
 
 namespace Ui {
 class DataChartForm;
@@ -16,18 +20,21 @@ public:
     explicit DataChartForm(QWidget *parent = nullptr);
     ~DataChartForm();
     unsigned int t;
-    float y;
     QLineSeries *series;
+    void deleteLine(unsigned char func, unsigned char seq);
 
 public slots:
-    void onDataComing();
+    void onDataComing(struct anotc_parsed_data_frame);
     void changeScroll(int value);
-
-signals:
-    void draw(QString name, float x, float y);
+    void start();
+    void addLine(unsigned char func, unsigned char seq);
 
 private:
     Ui::DataChartForm *ui;
+
+    QHash<unsigned short, char> frame_hash;
+    bool is_start;
+    std::vector<ColorType> color_list;
 };
 
 #endif // DATACHARTFORM_H

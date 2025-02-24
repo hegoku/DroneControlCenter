@@ -9,36 +9,61 @@ UDPThread::UDPThread(QObject *parent)
 {
     handleData = anotc_parse_data;
     is_bind = false;
+
+    udp_sock = new QUdpSocket();
+    connect(udp_sock, &QUdpSocket::readyRead, this, &UDPThread::handleUDPData, Qt::QueuedConnection);
 }
 
 
+// int UDPThread::open(QString ip, unsigned short port)
+// {
+//     if (isOpen()) return -1;
+//     socket_desc = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
+//     if(socket_desc < 0){
+//         qDebug("Error while creating socket");
+//         return -1;
+//     }
+
+//     server_addr.sin_family = AF_INET;
+//     server_addr.sin_port = htons(port);
+//     server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+
+//     client_addr.sin_family = AF_INET;
+//     client_addr.sin_port = htons(port);
+//     QByteArray ip_d = ip.toLocal8Bit();
+//     client_addr.sin_addr.s_addr = inet_addr(ip_d.data());
+
+//     const int opt=-1;
+//     int nb = setsockopt(socket_desc, SOL_SOCKET, SO_BROADCAST, (char *)&opt, sizeof(opt));
+//     if(nb==-1) {
+//         qDebug("set socket error...");
+//     }
+//     if(bind(socket_desc, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0){
+//         qDebug("Couldn't bind to the port");
+//         return -1;
+//     }
+//     is_bind = true;
+//     this->start();
+
+//     emit onConnect();
+//     return 0;
+// }
+
 int UDPThread::open(QString ip, unsigned short port)
 {
-    if (isOpen()) return -1;
-    socket_desc = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-    if(socket_desc < 0){
-        qDebug("Error while creating socket");
-        return -1;
+
+}
+
+void UDPThread::handleUDPData()
+{
+    while (udp_sock->hasPendingDatagrams()) {
+        QHostAddress hostAddress;
+        quint16 hostPort;
+        QByteArray data;
+        data.resize(udp_sock->pendingDatagramSize());
+        udp_sock->readDatagram(data.data(), data.size(), &hostAddress, &hostPort);
+        handleData(&data);
     }
-
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(port);
-    server_addr.sin_addr.s_addr = inet_addr("0.0.0.0");
-
-    client_addr.sin_family = AF_INET;
-    client_addr.sin_port = htons(port);
-    QByteArray ip_d = ip.toLocal8Bit();
-    client_addr.sin_addr.s_addr = inet_addr(ip_d.data());
-
-    if(bind(socket_desc, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0){
-        qDebug("Couldn't bind to the port");
-        return -1;
-    }
-    is_bind = true;
-    this->start();
-
-    emit onConnect();
-    return 0;
 }
 
 bool UDPThread::isOpen()
@@ -74,6 +99,7 @@ void UDPThread::run()
         // }
         len = recvfrom(socket_desc, rx_buffer, sizeof(rx_buffer), 0, (struct sockaddr*)&c_addr, &client_struct_length);
         if (len>0) {
+            qDebug("%c", rx_buffer[0]);
             QByteArray data = QByteArray::fromRawData(rx_buffer, len);
             // handleData(&data);
         }

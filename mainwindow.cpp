@@ -7,6 +7,7 @@
 #include <QDateTime>
 #include "DLog.h"
 #include "Anotc/anotc_custom_frame.h"
+#include <QSettings>
 
 MainWindow* MainWindow::instance = 0;
 
@@ -71,6 +72,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(anotc_thread, &AnotcThread::onFlightDataComing, ui->calibration_form, &CalibrationForm::updateData);
     connect(anotc_thread, &AnotcThread::onFlightDataComing, ui->mixer_form, &MixerForm::onFlightUpdate);
     connect(anotc_thread, &AnotcThread::onFlightDataComing, ui->rc_form, &RCForm::onFlightUpdate);
+    connect(anotc_thread, &AnotcThread::onFlightDataComing, ui->data_chart, &DataChartForm::onDataComing);
 
     connect(anotc_thread, &AnotcThread::onFlightParamComing, ui->parameter_viewer, &ParameterForm::updateData);
     connect(anotc_thread, &AnotcThread::onFlightParamComing, this, &MainWindow::getDeviceInfo);
@@ -83,6 +85,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->UDPWidget->handleData = anotc_parse_data;
 
     ui->dataTable->loadTable();
+    connect(ui->dataTable, &DataTable::addSeleectedData, ui->data_chart, &DataChartForm::addLine);
+
     anotc_thread->start(QThread::TimeCriticalPriority);
 }
 

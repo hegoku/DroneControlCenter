@@ -1,57 +1,62 @@
 #include "dataanalysicschart.h"
+#include <QPen>
+#include <QColor>
 
 DataAnalysicsChart::DataAnalysicsChart(QWidget *parent)
-    : QChartView(parent) {
-
-    setRubberBand(QChartView::RectangleRubberBand);
+    : QCustomPlot(parent) {
 
     autoScroll = true;
     max_x_range = 10000;
+    y_range = 10;
+    max_x = max_x_range;
 
-    chart = new QChart();
-    chart->legend()->hide();
-    setChart(chart);
+    max_points = 1000000;
 
-    axisX = new QValueAxis(this);
-    axisY = new QValueAxis(this);
-    chart->addAxis(axisX,Qt::AlignBottom);
-    chart->addAxis(axisY,Qt::AlignLeft);
+    this->yAxis->setRange(-y_range, y_range);
+    this->xAxis->setRange(0, max_x);
+    this->xAxis->setTicks(false);
 
-    axisX->setRange(0, max_x_range);
-    axisX->setTickCount(11);
-
-    max_points = max_x_range+100;
+    startTimer(25, Qt::CoarseTimer);
 }
 
 void DataAnalysicsChart::addLine(QString name) {
-    QLineSeries *series = new QLineSeries(this);
-    series->setName(name);
+    QCPGraph *graph = addGraph();
+    graph->setName(name);
+    series_list.insert(name, graph);
+    series_index_map.insert(name, this->graphCount()-1);
+}
 
-    chart->addSeries(series);
-    series->attachAxis(axisX);
-    series->attachAxis(axisY);
-    series_list.insert(name, series);
+void DataAnalysicsChart::setLineColor(QString name, const QColor &color) {
+    if (series_index_map.contains(name)) {
+        series_list.value(name)->setPen(QPen(color));
+    }
+}
+
+void DataAnalysicsChart::deleteLine(QString name)
+{
+    if (!series_list.contains(name)) return;
+    QCPGraph *graph = series_list.value(name);
+    series_list.remove(name);
+    series_index_map.remove(name);
+    this->removeGraph(graph);
+    delete graph;
 }
 
 void DataAnalysicsChart::addPoint(QString series, unsigned int x, float y)
 {
     if (series_list.contains(series)) {
-        series_list.value(series)->append(x, y);
-        if(autoScroll && x > max_x_range) {
-            // qreal scroll = chart->plotArea().width() / max_x_range;
-            // chart->scroll(scroll,0);
-            axisX->setRange(x-max_x_range, x);
-        }
-        if (min>y) {
-            min = y;
-        }
-        if (max<y) {
-            max = y;
+        series_list.value(series)->addData(x, y);
+        float tmp = fabs(y)*1.5;
+        if (tmp>y_range) {
+            y_range = round(tmp);
         }
 
-        axisY->setRange(min, max);
-        if (series_list.value(series)->count()>max_points) {
-            series_list.value(series)->removePoints(0, 1);
+        if (max_x<x) {
+            max_x = x;
+        }
+
+        if (series_list.value(series)->data()->size()>max_points) {
+            series_list.value(series)->data()->remove(max_x-max_points);
         }
     }
 }
@@ -61,12 +66,13 @@ void DataAnalysicsChart::setAutoScroll(bool value)
     autoScroll = value;
 }
 
-void DataAnalysicsChart::setXAxisRange(qreal min, qreal max)
+void DataAnalysicsChart::timerEvent(QTimerEvent *event)
 {
-    axisX->setRange(min, max);
-}
+    Q_UNUSED(event);
 
-int DataAnalysicsChart::getXSize()
-{
-    return max;
+    if(autoScroll) {
+        this->yAxis->setRange(-y_range, y_range);
+        this->xAxis->setRange(max_x - xAxis->range().size(), max_x);
+    }
+    this->replot();
 }

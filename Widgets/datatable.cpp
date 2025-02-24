@@ -1,6 +1,8 @@
 #include "datatable.h"
 #include "ui_datatable.h"
 #include "Anotc/anotc_data_frame.h"
+#include <QPoint>
+#include <QMenu>
 
 DataTable::DataTable(QWidget *parent)
     : QWidget(parent)
@@ -16,6 +18,7 @@ DataTable::DataTable(QWidget *parent)
     ui->treeView->setModel(model);
     ui->treeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->treeView->setExpandsOnDoubleClick(false);
+    ui->treeView->setContextMenuPolicy(Qt::CustomContextMenu);
 
     // ui->tableView->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     // ui->tableView->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
@@ -25,6 +28,7 @@ DataTable::DataTable(QWidget *parent)
     // ui->tableView->horizontalHeader()->setSectionsClickable(true);
 
     connect(ui->treeView, &QTreeView::clicked, this, &DataTable::selectionChanged);
+    connect(ui->treeView, &QTreeView::customContextMenuRequested, this, &DataTable::customContextMenuRequested);
 
     model->setColumnCount(5);
     model->setHeaderData(0, Qt::Horizontal, "ID");
@@ -144,4 +148,37 @@ void DataTable::calculateFreq()
         }
         parameter_freq.insert(parameter_counter.keys().at(i), current_count);
     }
+}
+
+void DataTable::customContextMenuRequested(const QPoint &pos)
+{
+    QModelIndex index = ui->treeView->indexAt(pos);
+    if (index.isValid()) {
+        QMenu menu;
+        menu.addAction(tr("Add to Data Chart"), this, &DataTable::addToDataChart);
+        menu.exec(QCursor::pos());
+    }
+}
+
+void DataTable::addToDataChart()
+{
+    QModelIndex index = ui->treeView->currentIndex();
+    if (index.parent().row()==-1) {
+        unsigned char func = index.sibling(index.row(), 0).data().toString().toInt(nullptr, 16);
+        for (int i=0;i<anotc_frame_defination_list.value(func)->params.size();i++) {
+            emit addSeleectedData(func, i);
+        }
+    } else {
+        QModelIndex cindex = index.sibling(index.row(), 1);
+        if (cindex.isValid()) {
+            unsigned char func = index.parent().sibling(index.parent().row(), 0).data().toString().toInt(nullptr, 16);
+            QString param = cindex.data().toString();
+            for (int i=0;i<anotc_frame_defination_list.value(func)->params.size();i++) {
+                if (anotc_frame_defination_list.value(func)->params.at(i)->name.compare(param)==0) {
+                    emit addSeleectedData(func, i);
+                }
+            }
+        }
+    }
+
 }

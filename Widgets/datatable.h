@@ -25,6 +25,11 @@ public slots:
     void selectionChanged(const QModelIndex &index);
     void updateData(struct anotc_parsed_data_frame);
     void calculateFreq();
+    void customContextMenuRequested(const QPoint &pos);
+    void addToDataChart();
+
+signals:
+    void addSeleectedData(unsigned char func, unsigned char index);
 
 private:
     Ui::DataTable *ui;

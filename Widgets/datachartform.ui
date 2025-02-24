@@ -23,7 +23,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="start_btn">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -34,19 +34,6 @@
    </property>
    <property name="text">
     <string>Start</string>
-   </property>
-  </widget>
-  <widget class="DataAnalysicsChart" name="chartView">
-   <property name="geometry">
-    <rect>
-     <x>210</x>
-     <y>10</y>
-     <width>631</width>
-     <height>521</height>
-    </rect>
-   </property>
-   <property name="horizontalScrollBarPolicy">
-    <enum>Qt::ScrollBarPolicy::ScrollBarAsNeeded</enum>
    </property>
   </widget>
   <widget class="QScrollBar" name="horizontalScrollBar">
@@ -68,12 +55,23 @@
     <enum>Qt::Orientation::Horizontal</enum>
    </property>
   </widget>
+  <widget class="DataAnalysicsChart" name="chartView" native="true">
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>10</y>
+     <width>631</width>
+     <height>521</height>
+    </rect>
+   </property>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>
    <class>DataAnalysicsChart</class>
-   <extends>QGraphicsView</extends>
+   <extends>QWidget</extends>
    <header>Widgets/dataanalysicschart.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

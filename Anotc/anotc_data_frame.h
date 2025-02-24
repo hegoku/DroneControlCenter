@@ -53,6 +53,8 @@ void anotc_euler_formater(QList<struct anotc_value> *frame_value);
 void anotc_quat_formater(QList<struct anotc_value> *frame_value);
 void anotc_alt_formater(QList<struct anotc_value> *frame_value);
 
+void anotc_system_info_formater(QList<struct anotc_value> *frame_value);
+
 extern QMap<unsigned char, struct anotc_frame_defination*> anotc_frame_defination_list;
 
 #endif // ANOTC_DATA_FRAME_H

@@ -300,12 +300,12 @@
             },
             {
                 "name":"Voltage",
-                "type":"Float",
+                "type":"UInt16",
                 "desc":""
             },
             {
                 "name":"Current",
-                "type":"Float",
+                "type":"UInt16",
                 "desc":""
             },
             {
@@ -320,11 +320,6 @@
         "name":"PID",
         "desc":"",
         "params":[
-            {
-                "name":"Timestamp",
-                "type":"UInt32",
-                "desc":""
-            },
             {
                 "name":"ROLL",
                 "type":"Float",
@@ -344,7 +339,8 @@
                 "name":"GYRO_X",
                 "type":"Float",
                 "desc":""
-            },            {
+            },
+            {
                 "name":"GYRO_Y",
                 "type":"Float",
                 "desc":""

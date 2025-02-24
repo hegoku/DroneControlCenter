@@ -2,35 +2,31 @@
 #define DATAANALYSICSCHART_H
 
 #include <QWidget>
-#include <QChartView>
-#include <QChart>
-#include <QLineSeries>
 #include <QHash>
-#include <QtCharts/QValueAxis>
+#include "qcustomplot.h"
 
-class DataAnalysicsChart : public QChartView
+class DataAnalysicsChart : public QCustomPlot
 {
     Q_OBJECT
 public:
     DataAnalysicsChart(QWidget *parent=nullptr);
     void addLine(QString name);
+    void deleteLine(QString name);
     unsigned int max_points;
     unsigned int max_x_range;
 
     void setAutoScroll(bool value);
-    void setXAxisRange(qreal min, qreal max);
-    int getXSize();
+    void timerEvent(QTimerEvent *event);
+    void setLineColor(QString name, const QColor &color);
 
 public slots:
     void addPoint(QString series, unsigned int x, float y);
 
 private:
-    QChart *chart;
-    QValueAxis *axisX;
-    QValueAxis *axisY;
-    float min;
-    float max;
-    QHash<QString, QLineSeries*> series_list;
+    float y_range;
+    unsigned long long max_x;
+    QHash<QString, QCPGraph*> series_list;
+    QHash<QString, unsigned int> series_index_map;
 
     bool autoScroll;
 };

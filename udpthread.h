@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QThread>
+#include <QUdpSocket>
 
 #ifdef _WIN64
 #include <winsock2.h>
@@ -27,6 +28,7 @@ public:
     void closeConnect();
     void (*handleData)(QByteArray *data);
     void sendData(const QByteArray &data);
+    void handleUDPData();
 
 signals:
     void onConnect();
@@ -44,6 +46,8 @@ private:
     char rx_buffer[2048];
 
     static QMutex mutex;
+
+    QUdpSocket *udp_sock;
 };
 
 #endif // UDPTHREAD_H
