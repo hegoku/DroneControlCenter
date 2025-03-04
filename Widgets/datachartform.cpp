@@ -37,6 +37,10 @@ void DataChartForm::addLine(unsigned char func, unsigned char seq)
             ColorType c = color_list.at(frame_hash.size());
             ui->chartView->setLineColor(anotc_frame_defination_list.value(func)->params.at(seq)->name, QColor(c.mRed, c.mGreen, c.mBlue));
             frame_hash.insert(id, 1);
+            QListWidgetItem* pItem =new QListWidgetItem(anotc_frame_defination_list.value(func)->params.at(seq)->name);
+            pItem->setCheckState(Qt::Unchecked);
+            pItem->setForeground(QColor(c.mRed, c.mGreen, c.mBlue));
+            ui->listWidget->addItem(pItem);
         }
     }
 }

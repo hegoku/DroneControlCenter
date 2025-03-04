@@ -16,7 +16,7 @@ DataAnalysicsChart::DataAnalysicsChart(QWidget *parent)
     this->xAxis->setRange(0, max_x);
     this->xAxis->setTicks(false);
 
-    startTimer(25, Qt::CoarseTimer);
+    startTimer(30, Qt::CoarseTimer);
 }
 
 void DataAnalysicsChart::addLine(QString name) {

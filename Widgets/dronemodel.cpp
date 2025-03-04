@@ -54,7 +54,7 @@ void DroneModel::initializate(const QString & obj_url)
     db.m_windowOn3D->camera()->lens()->setPerspectiveProjection(10.0f, 16.0f / 9.0f, 0.1f, 1000.0f);
     // 相机放哪里
     db.m_windowOn3D->camera()->setPosition(QVector3D(0, 0, 20.0f));
-    db.m_windowOn3D->camera()->setUpVector(QVector3D(0, 1, 0));
+    // db.m_windowOn3D->camera()->setUpVector(QVector3D(0, 1, 0));
     // 视角中心在哪里
     db.m_windowOn3D->camera()->setViewCenter(QVector3D(0, 0, 0));
 
@@ -105,6 +105,8 @@ void DroneModel::onAttitudeUpdate(struct anotc_parsed_data_frame item)
     } else if (item.func==ANOTC_FRAME_QUAT) {
         float roll,pitch,yaw;
         QQuaternion q = QQuaternion(item.frame_value.at(0).value.f, item.frame_value.at(1).value.f, item.frame_value.at(2).value.f, item.frame_value.at(3).value.f);
+        QQuaternion rq = QQuaternion(-0.7071068, 0, 0, 0.7071068);
+        q =  rq.inverted() * q * rq;
         // q.getEulerAngles(&pitch, &yaw, &roll);
         // rotateModel(yaw, roll, pitch);
         db.m_trans->setRotation(q);

@@ -62,7 +62,7 @@ void UDPPanel::connectUDP()
         settings.setValue("udp/port", ui->portEdit->text());
         emit onConnect();
     } else {
-        // emit onBeforeDisconnect();
+        emit onBeforeDisconnect();
         // udp_thread->closeConnect();
         udpSocket->close();
         is_bind = 0;
