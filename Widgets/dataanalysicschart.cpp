@@ -39,14 +39,13 @@ void DataAnalysicsChart::deleteLine(QString name)
     series_list.remove(name);
     series_index_map.remove(name);
     this->removeGraph(graph);
-    delete graph;
 }
 
 void DataAnalysicsChart::addPoint(QString series, unsigned int x, float y)
 {
     if (series_list.contains(series)) {
         series_list.value(series)->addData(x, y);
-        float tmp = fabs(y)*1.5;
+        float tmp = fabs(y)*1.1;
         if (tmp>y_range) {
             y_range = round(tmp);
         }

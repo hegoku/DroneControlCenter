@@ -7,6 +7,7 @@
 #include <QList>
 #include <Anotc/anotc_data_frame.h>
 #include "util.h"
+#include "Widgets/chartlistitem.h"
 
 namespace Ui {
 class DataChartForm;
@@ -28,6 +29,7 @@ public slots:
     void changeScroll(int value);
     void start();
     void addLine(unsigned char func, unsigned char seq);
+    void removeLine(ChartListItem* item);
 
 private:
     Ui::DataChartForm *ui;

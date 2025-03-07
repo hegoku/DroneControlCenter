@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>844</width>
+    <width>864</width>
     <height>582</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
     <rect>
      <x>12</x>
      <y>12</y>
-     <width>191</width>
+     <width>211</width>
      <height>521</height>
     </rect>
    </property>
@@ -39,7 +39,7 @@
   <widget class="QScrollBar" name="horizontalScrollBar">
    <property name="geometry">
     <rect>
-     <x>210</x>
+     <x>230</x>
      <y>530</y>
      <width>631</width>
      <height>16</height>
@@ -58,7 +58,7 @@
   <widget class="DataAnalysicsChart" name="chartView" native="true">
    <property name="geometry">
     <rect>
-     <x>210</x>
+     <x>230</x>
      <y>10</y>
      <width>631</width>
      <height>521</height>

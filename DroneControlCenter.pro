@@ -19,6 +19,7 @@ SOURCES += \
     Anotc/blockingqueue.cpp \
     DLog.cpp \
     Widgets/calibrationform.cpp \
+    Widgets/chartlistitem.cpp \
     Widgets/dataanalysicschart.cpp \
     Widgets/datachartform.cpp \
     Widgets/datatable.cpp \
@@ -48,6 +49,7 @@ HEADERS += \
     Anotc/blockingqueue.h \
     DLog.h \
     Widgets/calibrationform.h \
+    Widgets/chartlistitem.h \
     Widgets/dataanalysicschart.h \
     Widgets/datachartform.h \
     Widgets/datatable.h \
@@ -68,6 +70,7 @@ HEADERS += \
 
 FORMS += \
     Widgets/calibrationform.ui \
+    Widgets/chartlistitem.ui \
     Widgets/datachartform.ui \
     Widgets/datatable.ui \
     Widgets/dronemodel.ui \

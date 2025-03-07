@@ -4,6 +4,7 @@
 #include <QThread>
 #include <QValueAxis>
 #include <QColor>
+#include "Widgets/chartlistitem.h"
 
 DataChartForm::DataChartForm(QWidget *parent)
     : QWidget(parent)
@@ -37,10 +38,16 @@ void DataChartForm::addLine(unsigned char func, unsigned char seq)
             ColorType c = color_list.at(frame_hash.size());
             ui->chartView->setLineColor(anotc_frame_defination_list.value(func)->params.at(seq)->name, QColor(c.mRed, c.mGreen, c.mBlue));
             frame_hash.insert(id, 1);
-            QListWidgetItem* pItem =new QListWidgetItem(anotc_frame_defination_list.value(func)->params.at(seq)->name);
-            pItem->setCheckState(Qt::Unchecked);
-            pItem->setForeground(QColor(c.mRed, c.mGreen, c.mBlue));
+            QListWidgetItem* pItem =new QListWidgetItem();
+            ChartListItem* widget = new ChartListItem();
+            widget->setText(anotc_frame_defination_list.value(func)->params.at(seq)->name);
+            widget->setValue("0.00");
+            widget->setTextColor(QColor(c.mRed, c.mGreen, c.mBlue));
+            widget->setId(id);
+            pItem->setSizeHint(widget->sizeHint());
             ui->listWidget->addItem(pItem);
+            ui->listWidget->setItemWidget(pItem, widget);
+            connect(widget, &ChartListItem::onRemove, this, &DataChartForm::removeLine);
         }
     }
 }
@@ -50,7 +57,24 @@ void DataChartForm::deleteLine(unsigned char func, unsigned char seq)
     unsigned short id = (unsigned short)func<<8 | seq;
     if (frame_hash.contains(id)) {
         frame_hash.remove(id);
-        ui->chartView->addLine(anotc_frame_defination_list.value(func)->params.at(seq)->name);
+        ui->chartView->deleteLine(anotc_frame_defination_list.value(func)->params.at(seq)->name);
+    }
+}
+
+void DataChartForm::removeLine(ChartListItem* item)
+{
+    if (frame_hash.contains(item->getId())) {
+        unsigned char seq = (unsigned char)item->getId();
+        unsigned char func = item->getId()>>8;
+        deleteLine(func, seq);
+        for (int i=0;i<ui->listWidget->count();i++) {
+            ChartListItem *tmp = dynamic_cast<ChartListItem*>(ui->listWidget->itemWidget(ui->listWidget->item(i)));
+            if (tmp->getId()==item->getId()) {
+                ui->listWidget->removeItemWidget(ui->listWidget->item(i));
+                delete ui->listWidget->item(i);
+                delete item;
+            }
+        }
     }
 }
 

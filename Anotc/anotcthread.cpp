@@ -162,7 +162,6 @@ void AnotcThread::checkTimeout()
     for (int i=0;i<AnotcThread::timeout_queue.count();i++) {
         QByteArray data_to_send = QByteArray::fromRawData((char*)AnotcThread::timeout_queue.at(i)->frame, AnotcThread::timeout_queue.at(i)->frame->len+ANOTC_V8_HEAD_SIZE+2);
         AnotcThread::instance->sendDelegate(data_to_send);
-        DLogW(QString("f%1 try count:%2").arg(AnotcThread::timeout_queue.at(i)->frame->fun).arg(AnotcThread::timeout_queue.at(i)->try_count));
         AnotcThread::timeout_queue.at(i)->try_count--;
     }
 
