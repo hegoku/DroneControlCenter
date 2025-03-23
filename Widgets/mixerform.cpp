@@ -72,10 +72,10 @@ void MixerForm::onFlightUpdate(struct anotc_parsed_data_frame item)
         ui->motor_3_throttle->setValue(item.frame_value.at(2).value.uint16);
         ui->motor_4_throttle->setValue(item.frame_value.at(3).value.uint16);
     } else if (item.func==ANOTC_FRAME_CUSTOM_PID) {
-        ui->motor_1_throttle->setValue(item.frame_value.at(35).value.uint16);
-        ui->motor_2_throttle->setValue(item.frame_value.at(36).value.uint16);
-        ui->motor_3_throttle->setValue(item.frame_value.at(37).value.uint16);
-        ui->motor_4_throttle->setValue(item.frame_value.at(38).value.uint16);
+        ui->motor_1_throttle->setValue(item.frame_value.at(13).value.uint16);
+        ui->motor_2_throttle->setValue(item.frame_value.at(14).value.uint16);
+        ui->motor_3_throttle->setValue(item.frame_value.at(15).value.uint16);
+        ui->motor_4_throttle->setValue(item.frame_value.at(16).value.uint16);
     }
 }
 

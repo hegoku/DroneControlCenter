@@ -105,8 +105,9 @@ void DroneModel::onAttitudeUpdate(struct anotc_parsed_data_frame item)
     } else if (item.func==ANOTC_FRAME_QUAT) {
         float roll,pitch,yaw;
         QQuaternion q = QQuaternion(item.frame_value.at(0).value.f, item.frame_value.at(1).value.f, item.frame_value.at(2).value.f, item.frame_value.at(3).value.f);
-        QQuaternion rq = QQuaternion(-0.7071068, 0, 0, 0.7071068);
-        q =  rq.inverted() * q * rq;
+        // QQuaternion rq = QQuaternion(-0.7071068, 0, 0, 0.7071068);
+        QQuaternion rq = QQuaternion(0.5, 0.5, 0.5, 0.5);
+        q =  rq * q * rq.inverted();
         // q.getEulerAngles(&pitch, &yaw, &roll);
         // rotateModel(yaw, roll, pitch);
         db.m_trans->setRotation(q);

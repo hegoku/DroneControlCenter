@@ -321,173 +321,68 @@
         "desc":"",
         "params":[
             {
+                "name":"ACCEL_X",
+                "type":"Int16",
+                "desc":""
+            },
+            {
+                "name":"ACCEL_Y",
+                "type":"Int16",
+                "desc":""
+            },
+            {
+                "name":"ACCEL_Z",
+                "type":"Int16",
+                "desc":""
+            },
+            {
                 "name":"ROLL",
-                "type":"Float",
+                "type":"Int8",
                 "desc":""
             },
             {
                 "name":"PITCH",
-                "type":"Float",
+                "type":"Int8",
                 "desc":""
             },
             {
                 "name":"YAW",
-                "type":"Float",
+                "type":"Int8",
                 "desc":""
             },
             {
                 "name":"GYRO_X",
-                "type":"Float",
+                "type":"Int16",
                 "desc":""
             },
             {
                 "name":"GYRO_Y",
-                "type":"Float",
+                "type":"Int16",
                 "desc":""
             },
             {
                 "name":"GYRO_Z",
-                "type":"Float",
-                "desc":""
-            },
-            {
-                "name":"PID.ROLL_RATE.P",
-                "type":"Float",
-                "desc":""
-            },
-            {
-                "name":"PID.ROLL_RATE.I",
-                "type":"Float",
-                "desc":""
-            },
-            {
-                "name":"PID.ROLL_RATE.D",
-                "type":"Float",
-                "desc":""
-            },
-            {
-                "name":"PID.ROLL_RATE.O",
-                "type":"Float",
-                "desc":""
-            },
-            {
-                "name":"PID.PITCH_RATE.P",
-                "type":"Float",
-                "desc":""
-            },
-            {
-                "name":"PID.PITCH_RATE.I",
-                "type":"Float",
-                "desc":""
-            },
-            {
-                "name":"PID.PITCH_RATE.D",
-                "type":"Float",
-                "desc":""
-            },
-            {
-                "name":"PID.PITCH_RATE.O",
-                "type":"Float",
-                "desc":""
-            },
-            {
-                "name":"PID.YAW_RATE.P",
-                "type":"Float",
-                "desc":""
-            },
-            {
-                "name":"PID.YAW_RATE.I",
-                "type":"Float",
-                "desc":""
-            },
-            {
-                "name":"PID.YAW_RATE.D",
-                "type":"Float",
-                "desc":""
-            },
-            {
-                "name":"PID.YAW_RATE.O",
-                "type":"Float",
-                "desc":""
-            },
-            {
-                "name":"PID.ROLL.P",
-                "type":"Float",
-                "desc":""
-            },
-            {
-                "name":"PID.ROLL.I",
-                "type":"Float",
-                "desc":""
-            },
-            {
-                "name":"PID.ROLL.D",
-                "type":"Float",
-                "desc":""
-            },
-            {
-                "name":"PID.ROLL.O",
-                "type":"Float",
-                "desc":""
-            },
-            {
-                "name":"PID.PITCH.P",
-                "type":"Float",
-                "desc":""
-            },
-            {
-                "name":"PID.PITCH.I",
-                "type":"Float",
-                "desc":""
-            },
-            {
-                "name":"PID.PITCH.D",
-                "type":"Float",
-                "desc":""
-            },
-            {
-                "name":"PID.PITCH.O",
-                "type":"Float",
-                "desc":""
-            },
-            {
-                "name":"PID.YAW.P",
-                "type":"Float",
-                "desc":""
-            },
-            {
-                "name":"PID.YAW.I",
-                "type":"Float",
-                "desc":""
-            },
-            {
-                "name":"PID.YAW.D",
-                "type":"Float",
-                "desc":""
-            },
-            {
-                "name":"PID.YAW.O",
-                "type":"Float",
+                "type":"Int16",
                 "desc":""
             },
             {
                 "name":"SP_THROTTLE",
-                "type":"Float",
+                "type":"UInt16",
                 "desc":""
             },
             {
                 "name":"SP_ROLL",
-                "type":"Float",
+                "type":"Int16",
                 "desc":""
             },
             {
                 "name":"SP_PITCH",
-                "type":"Float",
+                "type":"Int16",
                 "desc":""
             },
             {
                 "name":"SP_YAW",
-                "type":"Float",
+                "type":"Int16",
                 "desc":""
             },
             {
@@ -511,32 +406,22 @@
                 "desc":""
             },
             {
-                "name":"ROLL_RATE_DESIRED",
-                "type":"Float",
-                "desc":""
-            },
-            {
-                "name":"PITCH_RATE_DESIRED",
-                "type":"Float",
-                "desc":""
-            },
-            {
-                "name":"YAW_RATE_DESIRED",
-                "type":"Float",
-                "desc":""
-            },
-            {
-                "name":"ACCEL_X",
+                "name":"PID.ROLL_RATE.P",
                 "type":"Int16",
                 "desc":""
             },
             {
-                "name":"ACCEL_Y",
+                "name":"PID.ROLL_RATE.I",
                 "type":"Int16",
                 "desc":""
             },
             {
-                "name":"ACCEL_Z",
+                "name":"PID.ROLL_RATE.D",
+                "type":"Int16",
+                "desc":""
+            },
+            {
+                "name":"PID.ROLL_RATE.O",
                 "type":"Int16",
                 "desc":""
             }
