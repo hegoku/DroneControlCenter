@@ -160,6 +160,28 @@
         ]
     },
     {
+        "id":7,
+        "name":"Speed",
+        "desc":"",
+        "params":[
+            {
+                "name":"SPEED_X",
+                "type":"Int16",
+                "desc":""
+            },
+            {
+                "name":"SPEED_Y",
+                "type":"Int16",
+                "desc":""
+            },
+            {
+                "name":"SPEED_Z",
+                "type":"Int16",
+                "desc":""
+            }
+        ]
+    },
+    {
         "id":32,
         "name":"PWM",
         "desc":"",

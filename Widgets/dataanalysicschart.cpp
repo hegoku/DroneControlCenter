@@ -12,7 +12,7 @@ DataAnalysicsChart::DataAnalysicsChart(QWidget *parent)
 
     max_points = 1000000;
 
-    this->yAxis->setRange(-y_range, y_range);
+    // this->yAxis->setRange(-y_range, y_range);
     this->xAxis->setRange(0, max_x);
     this->xAxis->setTicks(false);
 

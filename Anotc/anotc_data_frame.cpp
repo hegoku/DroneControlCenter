@@ -79,6 +79,7 @@ void loadDataFrameDefination(QString path)
     anotc_frame_defination_list.value(ANOTC_FRAME_EULER)->formater = anotc_euler_formater;
     anotc_frame_defination_list.value(ANOTC_FRAME_QUAT)->formater = anotc_quat_formater;
     anotc_frame_defination_list.value(ANOTC_FRAME_ALT)->formater = anotc_alt_formater;
+    anotc_frame_defination_list.value(ANOTC_FRAME_SPEED)->formater = anotc_speed_formater;
     anotc_frame_defination_list.value(ANOTC_FRAME_CUSTOM_SYSTEM_INFO)->formater = anotc_system_info_formater;
 }
 
@@ -222,6 +223,14 @@ void anotc_alt_formater(QList<struct anotc_value> *frame_value)
             (*frame_value)[i].type = 8;
             (*frame_value)[i].value.f = ((float)frame_value->at(i).value.int32) / 100.0;
         }
+    }
+}
+
+void anotc_speed_formater(QList<struct anotc_value> *frame_value)
+{
+    for (int i=0;i<frame_value->size();i++) {
+        (*frame_value)[i].type = 8;
+        (*frame_value)[i].value.f = ((float)frame_value->at(i).value.int16) / 100.0;
     }
 }
 
