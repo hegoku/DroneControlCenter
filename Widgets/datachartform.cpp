@@ -16,12 +16,13 @@ DataChartForm::DataChartForm(QWidget *parent)
 
     connect(ui->horizontalScrollBar, &QScrollBar::valueChanged, this, &DataChartForm::changeScroll);
     connect(ui->start_btn, &QPushButton::clicked, this, &DataChartForm::start);
-    connect(ui->clear_btn, &QPushButton::clicked, this, &DataChartForm::clearData);
+    connect(ui->clear_toolButton, &QPushButton::clicked, this, &DataChartForm::clearData);
 
     connect(ui->tracer_toolButton, &QToolButton::clicked, this, &DataChartForm::toggleTracer);
     connect(ui->drag_toolButton, &QToolButton::clicked, this, &DataChartForm::toggleDrag);
     connect(ui->autoscroll_toolButton, &QToolButton::clicked, this, &DataChartForm::toggleAutoScroll);
     connect(ui->zoom_toolButton, &QToolButton::clicked, this, &DataChartForm::toggleZoom);
+    connect(ui->save_toolButton, &QToolButton::clicked, this, &DataChartForm::saveData);
 
     connect(ui->chartView, &DataAnalysicsChart::tracerEnableChanged, this, &DataChartForm::tracerChanaged);
     connect(ui->chartView, &DataAnalysicsChart::autoScrollChanged, this, &DataChartForm::autoScrollChanaged);
@@ -54,6 +55,7 @@ void DataChartForm::addLine(unsigned char func, unsigned char seq)
             widget->setValue("0.00");
             widget->setTextColor(QColor(c.mRed, c.mGreen, c.mBlue));
             widget->setId(id);
+            widget->setChecked(true);
             pItem->setSizeHint(widget->sizeHint());
             ui->listWidget->addItem(pItem);
             ui->listWidget->setItemWidget(pItem, widget);
@@ -219,7 +221,19 @@ void DataChartForm::hideLine(ChartListItem* item, bool show)
     if (frame_hash.contains(item->getId())) {
         unsigned char seq = (unsigned char)item->getId();
         unsigned char func = item->getId()>>8;
-        unsigned short id = (unsigned short)func<<8 | seq;
         ui->chartView->showHideLine(anotc_frame_defination_list.value(func)->params.at(seq)->name, show);
+    }
+}
+
+void DataChartForm::saveData()
+{
+    t++;
+    for (long long x=0; x<t; x++) {
+        for (auto i = frame_hash.cbegin(), end = frame_hash.cend(); i != end; ++i) {
+            unsigned char seq = (unsigned char)i.key();
+            unsigned char func = i.key()>>8;
+            // ui->chartView->getLine(anotc_frame_defination_list.value(func)->params.at(seq)->name)->addData(12,11);
+            // qDebug("%f", ui->chartView->getLine(anotc_frame_defination_list.value(func)->params.at(seq)->name)->data()->keyRange());
+        }
     }
 }

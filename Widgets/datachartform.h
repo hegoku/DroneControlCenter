@@ -40,6 +40,7 @@ public slots:
     void autoScrollChanaged(bool enable);
     void dragChanaged(bool enable);
     void zoomChanged(bool enable);
+    void saveData();
 
 private:
     Ui::DataChartForm *ui;

@@ -63,3 +63,8 @@ void ChartListItem::checkClick(bool checked)
 {
     emit onCheckClick(this, checked);
 }
+
+void ChartListItem::setChecked(bool checked)
+{
+    ui->checkBox->setChecked(checked);
+}

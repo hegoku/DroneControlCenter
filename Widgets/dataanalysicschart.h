@@ -12,6 +12,7 @@ public:
     DataAnalysicsChart(QWidget *parent=nullptr);
     void addLine(QString name);
     void deleteLine(QString name);
+    QCPGraph* getLine(QString name);
     unsigned int max_points;
     unsigned int max_x_range;
 

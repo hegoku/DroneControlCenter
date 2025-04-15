@@ -23,6 +23,7 @@ public:
     QString getValue();
     void setId(int id);
     int getId();
+    void setChecked(bool checked);
 
 public slots:
     void closeClick(bool checked = false);

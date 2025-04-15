@@ -238,3 +238,11 @@ void DataAnalysicsChart::yAxisChanged(const QCPRange &newRange, const QCPRange &
         }
     }
 }
+
+QCPGraph* DataAnalysicsChart::getLine(QString name)
+{
+    if (series_list.contains(name)) {
+        return series_list.value(name);
+    }
+    return 0;
+}

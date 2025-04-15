@@ -105,7 +105,12 @@ void DataTable::loadTable()
 
 void DataTable::selectionChanged(const QModelIndex &index)
 {
-    ui->treeView->isExpanded(index)? ui->treeView->collapse(index) : ui->treeView->expand(index);
+    QModelIndex cindex = index.sibling(index.row(), 0);
+    if (ui->treeView->isExpanded(cindex)) {
+        ui->treeView->collapse(cindex);
+    } else {
+        ui->treeView->expand(cindex);
+    }
 }
 
 void DataTable::updateData(struct anotc_parsed_data_frame item)
