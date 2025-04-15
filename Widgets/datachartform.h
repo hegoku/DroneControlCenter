@@ -30,11 +30,21 @@ public slots:
     void start();
     void addLine(unsigned char func, unsigned char seq);
     void removeLine(ChartListItem* item);
+    void hideLine(ChartListItem* item, bool show);
+    void clearData();
+    void toggleTracer(bool checked);
+    void toggleDrag(bool checked);
+    void toggleAutoScroll(bool checked);
+    void toggleZoom(bool checked);
+    void tracerChanaged(bool enable);
+    void autoScrollChanaged(bool enable);
+    void dragChanaged(bool enable);
+    void zoomChanged(bool enable);
 
 private:
     Ui::DataChartForm *ui;
 
-    QHash<unsigned short, char> frame_hash;
+    QHash<unsigned short, int> frame_hash;
     bool is_start;
     std::vector<ColorType> color_list;
 };

@@ -9,6 +9,7 @@ ChartListItem::ChartListItem(QWidget *parent)
     ui->setupUi(this);
 
     connect(ui->closeBtn, &QToolButton::clicked, this, &ChartListItem::closeClick);
+    connect(ui->checkBox, &QCheckBox::clicked, this, &ChartListItem::checkClick);
 }
 
 ChartListItem::~ChartListItem()
@@ -56,4 +57,9 @@ void ChartListItem::setId(int id)
 int ChartListItem::getId()
 {
     return this->id;
+}
+
+void ChartListItem::checkClick(bool checked)
+{
+    emit onCheckClick(this, checked);
 }

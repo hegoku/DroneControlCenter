@@ -89,13 +89,12 @@ void ParameterForm::updateData(struct anotc_parsed_parameter_frame item)
             // }, Qt::QueuedConnection);
         } else {
             DLogN(QString("Read parameters' value ..."));
-            anotc_send_config_get_param_value(0);
+            anotc_send_config_get_param_value(refresh_par.firstKey());
         }
         changed_par.clear();
     } else if (item.func==ANOTC_FRAME_CONFIG_READ_WRITE) {
         unsigned short par_id = item.frame_value.value(0).value.uint16;
         if (!model->hasIndex(par_id, 1)) return;
-        // if (!refresh_par.contains(par_id)) return;
         unsigned char *tmp = (unsigned char*)malloc(sizeof(unsigned char)*item.frame_value.value(1).string.length());
         for (int i=0;i<item.frame_value.value(1).string.length();i++) {
             tmp[i] = (unsigned char)item.frame_value.value(1).string.toLatin1().data()[i];
@@ -136,9 +135,6 @@ void ParameterForm::updateData(struct anotc_parsed_parameter_frame item)
         }
         if (!refresh_par.isEmpty()) {
             anotc_send_config_get_param_value(refresh_par.firstKey());
-        // }
-        // if (param_count>par_id+1) {
-            // anotc_send_config_get_param_value(par_id+1);
         } else {
             DLogN(QString("Read parameters' value done"));
         }
@@ -165,7 +161,6 @@ void ParameterForm::receiveCheckFrame(struct anotc_parsed_check_frame item)
         if (refresh_par.isEmpty()) return;
         DLogN(QString("Save parameters' value done<br/>start to refresh parameters ..."));
         anotc_send_config_get_param_value(refresh_par.firstKey());
-        // anotc_send_config_get_count();
     }
 }
 

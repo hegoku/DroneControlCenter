@@ -26,9 +26,11 @@ public:
 
 public slots:
     void closeClick(bool checked = false);
+    void checkClick(bool checked);
 
 signals:
     void onRemove(ChartListItem*);
+    void onCheckClick(ChartListItem* item, bool checked);
 
 private:
     Ui::ChartListItem *ui;
