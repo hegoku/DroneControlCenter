@@ -62,6 +62,12 @@
    </item>
    <item>
     <widget class="QToolButton" name="closeBtn">
+     <property name="maximumSize">
+      <size>
+       <width>14</width>
+       <height>14</height>
+      </size>
+     </property>
      <property name="text">
       <string>X</string>
      </property>

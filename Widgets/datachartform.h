@@ -41,11 +41,12 @@ public slots:
     void dragChanaged(bool enable);
     void zoomChanged(bool enable);
     void saveData();
+    void hideAllLine();
 
 private:
     Ui::DataChartForm *ui;
 
-    QHash<unsigned short, int> frame_hash;
+    QHash<unsigned short, ChartListItem*> frame_hash;
     bool is_start;
     std::vector<ColorType> color_list;
 };

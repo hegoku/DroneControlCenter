@@ -394,17 +394,17 @@
             },
             {
                 "name":"SP_ROLL",
-                "type":"Int16",
+                "type":"Int8",
                 "desc":""
             },
             {
                 "name":"SP_PITCH",
-                "type":"Int16",
+                "type":"Int8",
                 "desc":""
             },
             {
                 "name":"SP_YAW",
-                "type":"Int16",
+                "type":"Int8",
                 "desc":""
             },
             {
@@ -428,22 +428,42 @@
                 "desc":""
             },
             {
-                "name":"PID.ROLL_RATE.P",
+                "name":"PID.RATE.P",
                 "type":"Int16",
                 "desc":""
             },
             {
-                "name":"PID.ROLL_RATE.I",
+                "name":"PID.RATE.I",
                 "type":"Int16",
                 "desc":""
             },
             {
-                "name":"PID.ROLL_RATE.D",
+                "name":"PID.RATE.D",
                 "type":"Int16",
                 "desc":""
             },
             {
-                "name":"PID.ROLL_RATE.O",
+                "name":"PID.RATE.O",
+                "type":"Int16",
+                "desc":""
+            },
+            {
+                "name":"PID.ANGLE.P",
+                "type":"Int16",
+                "desc":""
+            },
+            {
+                "name":"PID.ANGLE.I",
+                "type":"Int16",
+                "desc":""
+            },
+            {
+                "name":"PID.ANGLE.D",
+                "type":"Int16",
+                "desc":""
+            },
+            {
+                "name":"PID.ANGLE.O",
                 "type":"Int16",
                 "desc":""
             }

@@ -1,6 +1,7 @@
 #include "chartlistitem.h"
 #include "ui_chartlistitem.h"
 #include <QPalette>
+#include "QRgb"
 
 ChartListItem::ChartListItem(QWidget *parent)
     : QWidget(parent)
@@ -32,6 +33,11 @@ void ChartListItem::setTextColor(QColor color)
     QPalette palette = ui->title_label->palette();
     palette.setColor(QPalette::Text, color);
     ui->title_label->setPalette(palette);
+}
+
+void ChartListItem::setCheckBoxColor(QColor color)
+{
+    ui->checkBox->setStyleSheet(QString("QCheckBox::indicator::checked{background-color: rgb(%1, %2, %3);} QCheckBox::indicator::unchecked{background-color: white;border:1px solid gray;}").arg(qRed(color.rgb())).arg(qGreen(color.rgb())).arg(qBlue(color.rgb())));
 }
 
 void ChartListItem::setValue(QString value)

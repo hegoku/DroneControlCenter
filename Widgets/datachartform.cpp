@@ -15,8 +15,9 @@ DataChartForm::DataChartForm(QWidget *parent)
     is_start = false;
 
     connect(ui->horizontalScrollBar, &QScrollBar::valueChanged, this, &DataChartForm::changeScroll);
-    connect(ui->start_btn, &QPushButton::clicked, this, &DataChartForm::start);
+    connect(ui->start_toolButton, &QPushButton::clicked, this, &DataChartForm::start);
     connect(ui->clear_toolButton, &QPushButton::clicked, this, &DataChartForm::clearData);
+    connect(ui->hideall_btn, &QPushButton::clicked, this, &DataChartForm::hideAllLine);
 
     connect(ui->tracer_toolButton, &QToolButton::clicked, this, &DataChartForm::toggleTracer);
     connect(ui->drag_toolButton, &QToolButton::clicked, this, &DataChartForm::toggleDrag);
@@ -28,6 +29,8 @@ DataChartForm::DataChartForm(QWidget *parent)
     connect(ui->chartView, &DataAnalysicsChart::autoScrollChanged, this, &DataChartForm::autoScrollChanaged);
     connect(ui->chartView, &DataAnalysicsChart::rangeDragChanged, this, &DataChartForm::dragChanaged);
     connect(ui->chartView, &DataAnalysicsChart::zoomStatusChanged, this, &DataChartForm::zoomChanged);
+
+    ui->listWidget->setStyleSheet("QListView::item:selected {background-color:white;}");
 
     t=0;
 
@@ -53,7 +56,7 @@ void DataChartForm::addLine(unsigned char func, unsigned char seq)
             ChartListItem* widget = new ChartListItem();
             widget->setText(anotc_frame_defination_list.value(func)->params.at(seq)->name);
             widget->setValue("0.00");
-            widget->setTextColor(QColor(c.mRed, c.mGreen, c.mBlue));
+            widget->setCheckBoxColor(QColor(c.mRed, c.mGreen, c.mBlue));
             widget->setId(id);
             widget->setChecked(true);
             pItem->setSizeHint(widget->sizeHint());
@@ -61,7 +64,8 @@ void DataChartForm::addLine(unsigned char func, unsigned char seq)
             ui->listWidget->setItemWidget(pItem, widget);
             connect(widget, &ChartListItem::onRemove, this, &DataChartForm::removeLine);
             connect(widget, &ChartListItem::onCheckClick, this, &DataChartForm::hideLine);
-            frame_hash.insert(id, ui->listWidget->count()-1);
+            // frame_hash.insert(id, ui->listWidget->count()-1);
+            frame_hash.insert(id, widget);
         }
     }
 }
@@ -100,7 +104,8 @@ void DataChartForm::onDataComing(struct anotc_parsed_data_frame item)
     for (int i=0;i<item.frame_value.size();i++) {
         if (frame_hash.contains(id|i)) {
             has_data = true;
-            ChartListItem *tmp = dynamic_cast<ChartListItem*>(ui->listWidget->itemWidget(ui->listWidget->item(frame_hash.value(id|i))));
+            // ChartListItem *tmp = dynamic_cast<ChartListItem*>(ui->listWidget->itemWidget(ui->listWidget->item(frame_hash.value(id|i))));
+            ChartListItem *tmp = frame_hash.value(id|i);
             switch(item.frame_value.at(i).type) {
             case 0:
                 ui->chartView->addPoint(item.frame_value.at(i).name, t, item.frame_value.at(i).value.uint8);
@@ -158,12 +163,12 @@ void DataChartForm::changeScroll(int value)
 
 void DataChartForm::start()
 {
-    if (ui->start_btn->text().compare("Start")==0) {
+    if (ui->start_toolButton->isChecked()) {
         is_start = true;
-        ui->start_btn->setText("Stop");
+        ui->start_toolButton->setText("||");
     } else {
         is_start = false;
-        ui->start_btn->setText("Start");
+        ui->start_toolButton->setText(">");
     }
 }
 
@@ -235,5 +240,15 @@ void DataChartForm::saveData()
             // ui->chartView->getLine(anotc_frame_defination_list.value(func)->params.at(seq)->name)->addData(12,11);
             // qDebug("%f", ui->chartView->getLine(anotc_frame_defination_list.value(func)->params.at(seq)->name)->data()->keyRange());
         }
+    }
+}
+
+void DataChartForm::hideAllLine()
+{
+    for (auto i = frame_hash.cbegin(), end = frame_hash.cend(); i != end; ++i) {
+        unsigned char seq = (unsigned char)i.key();
+        unsigned char func = i.key()>>8;
+        ChartListItem *tmp = i.value();
+        tmp->setChecked(false);
     }
 }

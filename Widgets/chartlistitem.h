@@ -24,6 +24,7 @@ public:
     void setId(int id);
     int getId();
     void setChecked(bool checked);
+    void setCheckBoxColor(QColor color);
 
 public slots:
     void closeClick(bool checked = false);
