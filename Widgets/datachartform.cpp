@@ -250,5 +250,6 @@ void DataChartForm::hideAllLine()
         unsigned char func = i.key()>>8;
         ChartListItem *tmp = i.value();
         tmp->setChecked(false);
+        ui->chartView->showHideLine(anotc_frame_defination_list.value(func)->params.at(seq)->name, false);
     }
 }

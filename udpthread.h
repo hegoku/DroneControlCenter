@@ -28,12 +28,6 @@ public:
     void closeConnect();
     void (*handleData)(QByteArray *data);
     void sendData(const QByteArray &data);
-    void handleUDPData();
-
-signals:
-    void onConnect();
-    void onBeforeDisconnect();
-    void onDisconnect();
 
 private:
 #ifdef _WIN64
@@ -44,10 +38,6 @@ private:
     struct sockaddr_in server_addr, client_addr;
     bool is_bind;
     char rx_buffer[2048];
-
-    static QMutex mutex;
-
-    QUdpSocket *udp_sock;
 };
 
 #endif // UDPTHREAD_H

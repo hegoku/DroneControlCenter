@@ -8,7 +8,6 @@
 AnotcThread *AnotcThread::instance = 0;
 QTimer *AnotcThread::timer = new QTimer();
 
-
 AnotcThread::AnotcThread(QObject *parent)
     : QThread{parent}
 {

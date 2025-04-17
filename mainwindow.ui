@@ -116,7 +116,7 @@
          <enum>QTabWidget::TabShape::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <property name="elideMode">
          <enum>Qt::TextElideMode::ElideRight</enum>
@@ -164,8 +164,8 @@
            <rect>
             <x>10</x>
             <y>10</y>
-            <width>631</width>
-            <height>501</height>
+            <width>361</width>
+            <height>301</height>
            </rect>
           </property>
           <property name="sizePolicy">

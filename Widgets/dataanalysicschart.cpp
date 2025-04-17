@@ -7,7 +7,7 @@ DataAnalysicsChart::DataAnalysicsChart(QWidget *parent)
     : QCustomPlot(parent) {
 
     autoScroll = false;
-    max_x_range = 5000;
+    max_x_range = 4000;
 
     max_points = 1000000;
 
@@ -26,7 +26,6 @@ DataAnalysicsChart::DataAnalysicsChart(QWidget *parent)
     QPen pen = tracer->pen();
     pen.setColor(QColor(Qt::gray));
     pen.setStyle(Qt::DashDotDotLine);
-    pen.setWidthF(1.5);
     tracer->setPen(pen);
     tracer->setStyle(QCPItemTracer::tsCrosshair);
 
@@ -48,6 +47,7 @@ DataAnalysicsChart::DataAnalysicsChart(QWidget *parent)
 void DataAnalysicsChart::addLine(QString name) {
     QCPGraph *graph = addGraph();
     graph->setName(name);
+    graph->setAntialiased(false);
     series_list.insert(name, graph);
     series_index_map.insert(name, this->graphCount()-1);
 }
