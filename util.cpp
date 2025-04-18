@@ -1,4 +1,5 @@
 #include "util.h"
+#include <QtCore/qlogging.h>
 
 /**
     * 产生一个或多个唯一的颜色
@@ -53,6 +54,15 @@ unsigned int getUniqueColors(unsigned int count, std::vector<ColorType>& colors,
                         newColor[l] = maxValue;
                     }
                 }
+
+                float tr = newColor[0]/255;
+                float tg = newColor[1]/255;
+                float tb = newColor[2]/255;
+
+                float tmax = fmax(tr, fmax(tg,tb));
+                float tmin = fmin(tr, fmin(tg, tb));
+                float light = (tmax+tmin) / 2; //求HSL的L,即亮度
+                if (light>0.8) continue;
 
                 ColorType colorToInsert(newColor[0], newColor[1], newColor[2]);
 

@@ -36,10 +36,12 @@ public slots:
     void toggleDrag(bool checked);
     void toggleAutoScroll(bool checked);
     void toggleZoom(bool checked);
+    void toggleWheelZoom(bool checked);
     void tracerChanaged(bool enable);
     void autoScrollChanaged(bool enable);
     void dragChanaged(bool enable);
     void zoomChanged(bool enable);
+    void wheelZoomChanged(bool enable);
     void saveData();
     void hideAllLine();
 

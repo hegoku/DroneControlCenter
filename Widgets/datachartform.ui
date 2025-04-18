@@ -110,6 +110,16 @@
           </widget>
          </item>
          <item>
+          <widget class="QToolButton" name="wheelZoom_toolButton">
+           <property name="text">
+            <string>W</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QToolButton" name="autoscroll_toolButton">
            <property name="text">
             <string>A</string>

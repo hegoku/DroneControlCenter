@@ -17,6 +17,8 @@ DataAnalysicsChart::DataAnalysicsChart(QWidget *parent)
     min_x_value = 0;
     has_value = false;
 
+    this->setNoAntialiasingOnDrag(true);
+
     this->xAxis->setRange(0, max_x_value);
     // this->xAxis->setTicks(false);
 
@@ -40,13 +42,14 @@ DataAnalysicsChart::DataAnalysicsChart(QWidget *parent)
     tracerLabel->setPadding(QMargins(4,4,4,4));                        //文字距离边框几个像素
     tracerLabel->position->setParentAnchor(tracer->position);
 
-    connect(xAxis, SIGNAL(rangeChanged(QCPRange,QCPRange)), this, SLOT(xAxisChanged(QCPRange,QCPRange)));
-    connect(yAxis, SIGNAL(rangeChanged(QCPRange,QCPRange)), this, SLOT(yAxisChanged(QCPRange,QCPRange)));
+    // connect(xAxis, SIGNAL(rangeChanged(QCPRange,QCPRange)), this, SLOT(xAxisChanged(QCPRange,QCPRange)));
+    // connect(yAxis, SIGNAL(rangeChanged(QCPRange,QCPRange)), this, SLOT(yAxisChanged(QCPRange,QCPRange)));
 }
 
 void DataAnalysicsChart::addLine(QString name) {
     QCPGraph *graph = addGraph();
     graph->setName(name);
+    graph->setAdaptiveSampling(true);
     graph->setAntialiased(false);
     series_list.insert(name, graph);
     series_index_map.insert(name, this->graphCount()-1);
@@ -105,7 +108,6 @@ void DataAnalysicsChart::setAutoScroll(bool value)
     autoScroll = value;
     if (autoScroll) {
         this->setInteraction(QCP::iRangeDrag, false);
-        this->setInteraction(QCP::iRangeZoom, false);
         emit rangeDragChanged(false);
         this->setSelectionRectMode(QCP::SelectionRectMode::srmNone);
         emit zoomStatusChanged(false);
@@ -120,8 +122,17 @@ void DataAnalysicsChart::timerEvent(QTimerEvent *event)
     if(autoScroll) {
         // this->yAxis->rescale(true);
         if (has_value) {
-            this->yAxis->setRange(min_y_value, max_y_value);
-            this->xAxis->setRange(max_x_value - xAxis->range().size(), max_x_value);
+            if (this->yAxis->range().lower>min_y_value) {
+                this->yAxis->setRangeLower(min_y_value);
+            }
+            if (this->yAxis->range().upper<max_y_value) {
+                this->yAxis->setRangeUpper(max_y_value);
+            }
+            if (this->xAxis->range().upper<max_x_value) {
+                this->xAxis->setRangeUpper(max_x_value);
+            }
+            // this->yAxis->setRange(min_y_value, max_y_value);
+            // this->xAxis->setRange(max_x_value - xAxis->range().size(), max_x_value);
         }
     }
     this->replot();
@@ -178,7 +189,7 @@ void DataAnalysicsChart::setTracerEnable(bool enable)
     this->tracerEnable = enable;
     tracer->setVisible(enable);
     tracerLabel->setVisible(enable);
-    emit rangeDragChanged(false);
+    emit tracerEnableChanged(enable);
 }
 
 void DataAnalysicsChart::setRangeDrag(bool enable)
@@ -197,14 +208,22 @@ void DataAnalysicsChart::setZoom(bool enable)
 {
     if (enable) {
         this->autoScroll = false;
-        this->setInteraction(QCP::iRangeZoom, true);
         this->setSelectionRectMode(QCP::SelectionRectMode::srmZoom);
         emit autoScrollChanged(false);
     } else {
-        this->setInteraction(QCP::iRangeZoom, false);
         this->setSelectionRectMode(QCP::SelectionRectMode::srmNone);
     }
     emit zoomStatusChanged(enable);
+}
+
+void DataAnalysicsChart::setWheelZoom(bool enable)
+{
+    if (enable) {
+        this->setInteraction(QCP::iRangeZoom, true);
+    } else {
+        this->setInteraction(QCP::iRangeZoom, false);
+    }
+    emit wheelZoomStatusChanged(enable);
 }
 
 void DataAnalysicsChart::xAxisChanged(const QCPRange &newRange, const QCPRange &oldRange)

@@ -24,6 +24,7 @@ public:
     void setTracerEnable(bool enable);
     void setRangeDrag(bool enable);
     void setZoom(bool enable);
+    void setWheelZoom(bool enable);
 
 public slots:
     void addPoint(QString series, unsigned int x, float y);
@@ -35,6 +36,7 @@ signals:
     void autoScrollChanged(bool enable);
     void rangeDragChanged(bool enable);
     void zoomStatusChanged(bool enable);
+    void wheelZoomStatusChanged(bool enable);
 
 private:
     QHash<QString, QCPGraph*> series_list;

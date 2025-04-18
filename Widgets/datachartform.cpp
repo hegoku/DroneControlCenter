@@ -24,15 +24,19 @@ DataChartForm::DataChartForm(QWidget *parent)
     connect(ui->autoscroll_toolButton, &QToolButton::clicked, this, &DataChartForm::toggleAutoScroll);
     connect(ui->zoom_toolButton, &QToolButton::clicked, this, &DataChartForm::toggleZoom);
     connect(ui->save_toolButton, &QToolButton::clicked, this, &DataChartForm::saveData);
+    connect(ui->wheelZoom_toolButton, &QToolButton::clicked, this, &DataChartForm::toggleWheelZoom);
 
     connect(ui->chartView, &DataAnalysicsChart::tracerEnableChanged, this, &DataChartForm::tracerChanaged);
     connect(ui->chartView, &DataAnalysicsChart::autoScrollChanged, this, &DataChartForm::autoScrollChanaged);
     connect(ui->chartView, &DataAnalysicsChart::rangeDragChanged, this, &DataChartForm::dragChanaged);
     connect(ui->chartView, &DataAnalysicsChart::zoomStatusChanged, this, &DataChartForm::zoomChanged);
+    connect(ui->chartView, &DataAnalysicsChart::wheelZoomStatusChanged, this, &DataChartForm::wheelZoomChanged);
 
     ui->listWidget->setStyleSheet("QListView::item:selected {background-color:white;}");
 
     t=0;
+    this->toggleAutoScroll(true);
+    this->toggleWheelZoom(true);
 
     std::vector<ColorType> e;
     getUniqueColors(50, color_list, e);
@@ -252,4 +256,14 @@ void DataChartForm::hideAllLine()
         tmp->setChecked(false);
         ui->chartView->showHideLine(anotc_frame_defination_list.value(func)->params.at(seq)->name, false);
     }
+}
+
+void DataChartForm::toggleWheelZoom(bool checked)
+{
+    ui->chartView->setWheelZoom(checked);
+}
+
+void DataChartForm::wheelZoomChanged(bool checked)
+{
+    ui->wheelZoom_toolButton->setChecked(checked);
 }
