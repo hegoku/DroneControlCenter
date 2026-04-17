@@ -1,5 +1,13 @@
 #include "datachartform.h"
 #include "ui_datachartform.h"
+#include <QDateTime>
+#include <QDir>
+#include <QFile>
+#include <QFileDialog>
+#include <QFileInfo>
+#include <QMessageBox>
+#include <QStringList>
+#include <QTextStream>
 #include <QTimer>
 #include <QThread>
 #include <QValueAxis>
@@ -79,6 +87,7 @@ void DataChartForm::deleteLine(unsigned char func, unsigned char seq)
     unsigned short id = (unsigned short)func<<8 | seq;
     if (frame_hash.contains(id)) {
         frame_hash.remove(id);
+        removeSavedMeasureData(id);
         ui->chartView->deleteLine(anotc_frame_defination_list.value(func)->params.at(seq)->name);
     }
 }
@@ -104,63 +113,39 @@ void DataChartForm::onDataComing(struct anotc_parsed_data_frame item)
 {
     if (is_start==false) return;
     bool has_data = false;
+    const bool merge_with_last_row = !plot_rows.isEmpty() && plot_rows.last().timestamp == item.timestamp;
+    const unsigned int sample_index = merge_with_last_row && t>0 ? t-1 : t;
+    SavedPlotRow plot_row;
+    plot_row.timestamp = item.timestamp;
     unsigned short id = (unsigned short)item.func<<8;
     for (int i=0;i<item.frame_value.size();i++) {
         if (frame_hash.contains(id|i)) {
             has_data = true;
-            // ChartListItem *tmp = dynamic_cast<ChartListItem*>(ui->listWidget->itemWidget(ui->listWidget->item(frame_hash.value(id|i))));
             ChartListItem *tmp = frame_hash.value(id|i);
-            switch(item.frame_value.at(i).type) {
-            case 0:
-                ui->chartView->addPoint(item.frame_value.at(i).name, t, item.frame_value.at(i).value.uint8);
-                tmp->setValue(QString::number(item.frame_value.at(i).value.uint8));
-                break;
-            case 1:
-                ui->chartView->addPoint(item.frame_value.at(i).name, t, item.frame_value.at(i).value.int8);
-                tmp->setValue(QString::number(item.frame_value.at(i).value.int8));
-                break;
-            case 2:
-                ui->chartView->addPoint(item.frame_value.at(i).name, t, item.frame_value.at(i).value.uint16);
-                tmp->setValue(QString::number(item.frame_value.at(i).value.uint16));
-                break;
-            case 3:
-                ui->chartView->addPoint(item.frame_value.at(i).name, t, item.frame_value.at(i).value.int16);
-                tmp->setValue(QString::number(item.frame_value.at(i).value.int16));
-                break;
-            case 4:
-                ui->chartView->addPoint(item.frame_value.at(i).name, t, item.frame_value.at(i).value.uint32);
-                tmp->setValue(QString::number(item.frame_value.at(i).value.uint32));
-                break;
-            case 5:
-                ui->chartView->addPoint(item.frame_value.at(i).name, t, item.frame_value.at(i).value.int32);
-                tmp->setValue(QString::number(item.frame_value.at(i).value.int32));
-                break;
-            case 6:
-                ui->chartView->addPoint(item.frame_value.at(i).name, t, item.frame_value.at(i).value.uint64);
-                tmp->setValue(QString::number(item.frame_value.at(i).value.uint64));
-                break;
-            case 7:
-                ui->chartView->addPoint(item.frame_value.at(i).name, t, item.frame_value.at(i).value.int64);
-                tmp->setValue(QString::number(item.frame_value.at(i).value.int64));
-                break;
-            case 8:
-                ui->chartView->addPoint(item.frame_value.at(i).name, t, item.frame_value.at(i).value.f);
-                tmp->setValue(QString::number(item.frame_value.at(i).value.f));
-                break;
-            case 9:
-                ui->chartView->addPoint(item.frame_value.at(i).name, t, item.frame_value.at(i).value.d);
-                tmp->setValue(QString::number(item.frame_value.at(i).value.d));
-                break;
-            }
+            const struct anotc_value &value = item.frame_value.at(i);
+            const QString display_value = frameValueToDisplayString(value);
+            const QString export_value = frameValueToExportString(value);
+            ui->chartView->addPoint(value.name, sample_index, frameValueToNumber(value));
+            tmp->setValue(display_value);
+            plot_row.values.insert(id|i, export_value);
         }
     }
     if (has_data) {
-        t++;
+        if (merge_with_last_row) {
+            SavedPlotRow &last_row = plot_rows.last();
+            for (auto value_it = plot_row.values.cbegin(), value_end = plot_row.values.cend(); value_it != value_end; ++value_it) {
+                last_row.values.insert(value_it.key(), value_it.value());
+            }
+        } else {
+            plot_rows.append(plot_row);
+            t++;
+        }
     }
 }
 
 void DataChartForm::changeScroll(int value)
 {
+    Q_UNUSED(value);
     // unsigned int a = value*ui->chartView->getXSize()/ui->horizontalScrollBar->maximum();
     // ui->chartView->setXAxisRange(a-ui->chartView->max_x_range, a);
 }
@@ -181,6 +166,7 @@ void DataChartForm::clearData()
     bool start = is_start;
     is_start=false;
     t=0;
+    plot_rows.clear();
     ui->chartView->clearData();
     is_start = start;
 }
@@ -236,14 +222,62 @@ void DataChartForm::hideLine(ChartListItem* item, bool show)
 
 void DataChartForm::saveData()
 {
-    t++;
-    for (long long x=0; x<t; x++) {
-        for (auto i = frame_hash.cbegin(), end = frame_hash.cend(); i != end; ++i) {
-            unsigned char seq = (unsigned char)i.key();
-            unsigned char func = i.key()>>8;
-            // ui->chartView->getLine(anotc_frame_defination_list.value(func)->params.at(seq)->name)->addData(12,11);
-            // qDebug("%f", ui->chartView->getLine(anotc_frame_defination_list.value(func)->params.at(seq)->name)->data()->keyRange());
+    QList<unsigned short> measure_ids;
+    QStringList header;
+
+    for (int i=0;i<ui->listWidget->count();i++) {
+        ChartListItem *item = qobject_cast<ChartListItem*>(ui->listWidget->itemWidget(ui->listWidget->item(i)));
+        if (item==nullptr) continue;
+        measure_ids.append(item->getId());
+        header.append(csvEscape(item->getText()));
+    }
+
+    if (measure_ids.isEmpty()) {
+        QMessageBox::information(this, tr("Save Plot Data"), tr("No measures are selected in the chart list."));
+        return;
+    }
+
+    QString file_name = QFileDialog::getSaveFileName(
+                this,
+                tr("Save Plot Data"),
+                QDir::home().filePath(QString("plot_data_%1.csv").arg(QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss_zzz"))),
+                tr("CSV Files (*.csv);;All Files (*)"));
+    if (file_name.isEmpty()) {
+        return;
+    }
+
+    if (QFileInfo(file_name).suffix().isEmpty()) {
+        file_name.append(".csv");
+    }
+
+    QFile file(file_name);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QMessageBox::warning(this, tr("Save Plot Data"), tr("Failed to open %1 for writing.").arg(file_name));
+        return;
+    }
+
+    QTextStream stream(&file);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    stream.setCodec("UTF-8");
+#endif
+
+    stream << "timestamp";
+    for (const QString &column_name : header) {
+        stream << "," << column_name;
+    }
+    stream << "\n";
+
+    QHash<unsigned short, QString> last_values;
+    for (const SavedPlotRow &row : plot_rows) {
+        for (auto value_it = row.values.cbegin(), value_end = row.values.cend(); value_it != value_end; ++value_it) {
+            last_values.insert(value_it.key(), value_it.value());
         }
+
+        stream << csvEscape(formatTimestamp(row.timestamp));
+        for (unsigned short id : measure_ids) {
+            stream << "," << csvEscape(last_values.value(id));
+        }
+        stream << "\n";
     }
 }
 
@@ -266,4 +300,91 @@ void DataChartForm::toggleWheelZoom(bool checked)
 void DataChartForm::wheelZoomChanged(bool checked)
 {
     ui->wheelZoom_toolButton->setChecked(checked);
+}
+
+QString DataChartForm::frameValueToDisplayString(const struct anotc_value &value) const
+{
+    switch(value.type) {
+    case 0:
+        return QString::number(value.value.uint8);
+    case 1:
+        return QString::number(value.value.int8);
+    case 2:
+        return QString::number(value.value.uint16);
+    case 3:
+        return QString::number(value.value.int16);
+    case 4:
+        return QString::number(value.value.uint32);
+    case 5:
+        return QString::number(value.value.int32);
+    case 6:
+        return QString::number(value.value.uint64);
+    case 7:
+        return QString::number(value.value.int64);
+    case 8:
+        return QString::number(value.value.f);
+    case 9:
+        return QString::number(value.value.d);
+    default:
+        return QString();
+    }
+}
+
+QString DataChartForm::frameValueToExportString(const struct anotc_value &value) const
+{
+    switch(value.type) {
+    case 8:
+        return QString::number(value.value.f, 'g', 9);
+    case 9:
+        return QString::number(value.value.d, 'g', 17);
+    default:
+        return frameValueToDisplayString(value);
+    }
+}
+
+double DataChartForm::frameValueToNumber(const struct anotc_value &value) const
+{
+    switch(value.type) {
+    case 0:
+        return value.value.uint8;
+    case 1:
+        return value.value.int8;
+    case 2:
+        return value.value.uint16;
+    case 3:
+        return value.value.int16;
+    case 4:
+        return value.value.uint32;
+    case 5:
+        return value.value.int32;
+    case 6:
+        return value.value.uint64;
+    case 7:
+        return value.value.int64;
+    case 8:
+        return value.value.f;
+    case 9:
+        return value.value.d;
+    default:
+        return 0.0;
+    }
+}
+
+QString DataChartForm::formatTimestamp(qint64 timestamp) const
+{
+    return QDateTime::fromMSecsSinceEpoch(timestamp).toString("yyyy-MM-dd HH:mm:ss.zzz");
+}
+
+QString DataChartForm::csvEscape(const QString &value) const
+{
+    QString escaped = value;
+    escaped.replace("\"", "\"\"");
+    return QString("\"%1\"").arg(escaped);
+}
+
+void DataChartForm::removeSavedMeasureData(unsigned short id)
+{
+    for (SavedPlotRow &row : plot_rows) {
+        row.values.remove(id);
+    }
 }

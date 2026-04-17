@@ -46,9 +46,22 @@ public slots:
     void hideAllLine();
 
 private:
+    struct SavedPlotRow {
+        qint64 timestamp;
+        QHash<unsigned short, QString> values;
+    };
+
+    QString frameValueToDisplayString(const struct anotc_value &value) const;
+    QString frameValueToExportString(const struct anotc_value &value) const;
+    double frameValueToNumber(const struct anotc_value &value) const;
+    QString formatTimestamp(qint64 timestamp) const;
+    QString csvEscape(const QString &value) const;
+    void removeSavedMeasureData(unsigned short id);
+
     Ui::DataChartForm *ui;
 
     QHash<unsigned short, ChartListItem*> frame_hash;
+    QList<SavedPlotRow> plot_rows;
     bool is_start;
     std::vector<ColorType> color_list;
 };
